@@ -1,0 +1,3 @@
+[submodule "Core/MazeSolver"]
+	path = Core/MazeSolver
+	url = git@github.com:mmaakkyyii/MazeSolver.git
