@@ -13,18 +13,34 @@
 #include "encorder.hpp"
 #include "buzzer.hpp"
 #include "PID.hpp"
-//#include "wall_sensor.hpp"
 #include "gpio.h"
+#include "ui.hpp"
+#include "localization.hpp"
+#include "wall_sensor.hpp"
+#include "battery_check.hpp"
+#include "MazeSolver.hpp"
+#include "mouse.hpp"
+#include "MachineMode.hpp"
 
-//WallSensor wall_sensor;
-IMU imu;
-Motors motors;
-Encorders encorders(CONTROL_PERIOD_ms);
-Buzzer buzzer(CONTROL_PERIOD_ms);
 
 PID_Controler motor_r_pid(0.0005,0.00005,0,CONTROL_PERIOD_ms);
 PID_Controler motor_l_pid(0.0005,0.00005,0,CONTROL_PERIOD_ms);
 PID_Controler angle_pid(6,0.0052,0,CONTROL_PERIOD_ms);
+
+PID_Controler PID_motorL(Kp_motorL, Ki_motorL, Kd_motorL, CONTROL_PERIOD_ms);
+PID_Controler PID_motorR(Kp_motorR, Ki_motorR, Kd_motorR, CONTROL_PERIOD_ms);
+Motors motors;
+Encorders encorders(CONTROL_PERIOD_ms);
+IMU imu;
+Localization localization(0,0,0,CONTROL_PERIOD_ms,&encorders);
+WallSensor wall_sensor;
+BatteryCheck battery_check;
+Buzzer buzzer(CONTROL_PERIOD_ms);
+UI ui;
+MazeSolver maze_solver;
+
+Mouse mouse(&PID_motorR,&PID_motorL, &motors,&localization,&encorders,&imu,&wall_sensor,&battery_check,&buzzer,&ui,&maze_solver);
+MachineMode* mode;
 
 void Init(){
 	HAL_Delay(1000);
@@ -68,7 +84,7 @@ void Interrupt1ms(){
 
 	  //target_vel=30;
 
-	  if(!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin)){
+	  if(!ui.GetSW1()){
 		  v=0.3;
 		  control_flag=false;
 	  }else{
