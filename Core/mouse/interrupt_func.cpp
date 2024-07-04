@@ -1,7 +1,9 @@
 #include "interrupt_func.h"
 #include "mouse.hpp"
 #include "MachineMode.hpp"
+
 #include "ModeSelectMode.hpp"
+#include "DebugMode.hpp"
 
 extern Mouse mouse;
 extern MachineMode* mode; 
