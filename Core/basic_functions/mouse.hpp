@@ -1,8 +1,9 @@
 #ifndef _MOUSE_HPP_
 #define _MOUSE_HPP_
 
-#include "buzzer.hpp"
+#include "stdio.h"
 
+#include "buzzer.hpp"
 #include "PID.hpp"
 #include "motor.hpp"
 #include "encorder.hpp"

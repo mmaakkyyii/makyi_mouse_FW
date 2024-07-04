@@ -20,6 +20,8 @@ typedef enum {
 	reset_map=15
 }ModeType;
 
+Trajectory* trajectryUpdate(Mouse* mouse,clothoid_params clothoid);
+
 
 class MachineMode{
 public:
@@ -34,7 +36,8 @@ public:
 	virtual void Interrupt_1ms(){};
 	int IsOtherMode(){return 0;};
 	void CheckBattery(){
-		if(mouse->battery_check->GetBatteryVoltage_V() < 3.5){
+		float V=mouse->battery_check->GetBatteryVoltage_V();
+		if(V < 0.1){
 			low_batt_count++;
 		}else{
 			low_batt_count=0;
@@ -72,17 +75,6 @@ public:
 	void Interrupt_1ms();
 	LowBattery(Mouse* _mouse);
 	virtual ~LowBattery(){};
-};
-class ModeSelect:public MachineMode{
-public:
-	int mode_val;
-	int sw1,sw2,sw3,pre_sw1,pre_sw2,pre_sw3;
-
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	ModeSelect(Mouse* _mouse);
-	virtual ~ModeSelect(){};
 };
 class SerchRun:public MachineMode{
 public:

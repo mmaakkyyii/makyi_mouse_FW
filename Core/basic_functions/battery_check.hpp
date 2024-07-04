@@ -10,6 +10,8 @@ public:
 	void Update();
 	float GetBatteryVoltage_V();
 private:
+	float R1=6.8;
+	float R2=15;
 	uint16_t adc_val[1];
 };
 
