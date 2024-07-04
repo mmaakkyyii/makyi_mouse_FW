@@ -41,7 +41,9 @@ void ModeSelect::Interrupt_1ms(){
 	if(encL_deg>90){
 		encL_deg=0;
 		mode_val++;
+
 		if(mode_val<15){
+			printf("ModeSelect%d\n\r",mode_val);
 			mouse->buzzer->On_ms(400,20);
 		}else{
 			mode_val=15;
@@ -51,6 +53,7 @@ void ModeSelect::Interrupt_1ms(){
 		encL_deg=0;
 		mode_val--;
 		if(mode_val>0){
+			printf("ModeSelect%d\n\r",mode_val);
 			mouse->buzzer->On_ms(500,20);
 		}else{
 			mode_val=0;
@@ -58,7 +61,6 @@ void ModeSelect::Interrupt_1ms(){
 		}
 
 	}
-	printf("mode:%d %d\n\r",mode_val,(int)encL_deg);
 
 	if(sw1<pre_sw1){
 

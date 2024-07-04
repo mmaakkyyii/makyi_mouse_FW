@@ -49,6 +49,9 @@ void Init(){
 }
 
 void Loop(){
+	mouse.Loop();
+	mode->Loop();
+	HAL_Delay(10);
 
 }
 

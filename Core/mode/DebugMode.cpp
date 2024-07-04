@@ -51,10 +51,14 @@ void Debug::Interrupt_1ms(){
 	t_ms++;
 	printf("t=%d\r\n",t_ms);
 
-	mouse->motors->SetVoltageR(0.2);
-	mouse->motors->SetVoltageL(0.2);
+	mouse->motors->SetVoltageR(0.25);
+	mouse->motors->SetVoltageL(0.25);
 
-	if(t_ms>500){
+	mouse->log_data[mouse->log_index][0]=(int)(mouse->encorders->GetVelociryL_mm_s() );
+	mouse->log_data[mouse->log_index][1]=(int)(mouse->encorders->GetVelociryR_mm_s() );
+	mouse->log_index++;
+
+	if(t_ms>1000){
 		printf("deleat\r\n");
 		next_mode=modeSelect_mode;
 	}

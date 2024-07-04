@@ -49,8 +49,11 @@ public:
 	WallMask wall_mask;
 	bool runing_buzzer;
 
-	
-private:	
+	static const int log_data_num=1000;
+	int log_data[log_data_num][4];
+	int log_index=0;
+
+private:
 
 	float period_ms;
 	

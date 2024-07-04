@@ -22,9 +22,6 @@ float acc;
 
 bool goal_flag=false;
 
-const int log_data_num=3000;
-int log_data[log_data_num][4];
-int log_index=0;
 float gyro[3];
 int gyro_raw[3];
 
@@ -405,10 +402,10 @@ void SerchRun::Interrupt_1ms(){
 			if(trajectory->GetTragType()==rotate){
 
 				target_omega+= Kp_theta*e_theta + Ki_theta*sum_theta;
-				if(log_index<log_data_num-1){
-					log_data[log_index][0]=(int)(target_theta*1000);
-					log_data[log_index][1]=(int)(thetaa*1000);
-					log_index++;
+				if(mouse->log_index < mouse->log_data_num-1){
+					mouse->log_data[mouse->log_index][0]=(int)(target_theta*1000);
+					mouse->log_data[mouse->log_index][1]=(int)(thetaa*1000);
+					mouse->log_index++;
 				}
 			}else if(flash_flag==true && trajectory->GetTragType()==stay){
 				flash_flag=false;
@@ -912,12 +909,12 @@ void DoNotRotate::Interrupt_1ms(){
 	}else{
 
 
-		log_index=0;
+		mouse->log_index=0;
 		mouse->imu->GetGyro(gyro);
 		mouse->imu->GetGyroRaw(gyro_raw);
-		if(log_index<log_data_num){
-			log_data[log_index][0]=gyro_raw[2];
-			log_index++;
+		if(mouse->log_index<mouse->log_data_num){
+			mouse->log_data[mouse->log_index][0]=gyro_raw[2];
+			mouse->log_index++;
 		}else{
 			mouse->motors->SetVoltageR(0);
 			mouse->motors->SetVoltageL(0);
@@ -1153,9 +1150,9 @@ next_mode=parameterSetting_mode;
 ///////////////////////////
 void LogOutput::Loop(){
 
-	printf("%d,%d,%d,%d\r\n",log_data[index][0],log_data[index][1],log_data[index][2],log_data[index][3]);
+	printf("%d,%d,%d,%d\r\n",mouse->log_data[index][0],mouse->log_data[index][1],mouse->log_data[index][2],mouse->log_data[index][3]);
 	index++;
-	if(index>log_data_num)next_mode=modeSelect_mode;
+	if(index > mouse->log_data_num)next_mode=modeSelect_mode;
 }
 void LogOutput::Init(){
 	current_mode=logOutput_mode;
