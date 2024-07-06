@@ -14,6 +14,7 @@
 #include "localization.hpp"
 #include "trajectory.hpp"
 #include "MazeSolver.hpp"
+#include "Jacobian.hpp"
 
 class Mouse{
 public:

@@ -29,7 +29,7 @@ t_ms(0)
 {
 };
 void Debug::Loop(){
-	printf("%d,%d,%d,%d\r\n",(int)target_velocity_r,(int)target_velocity_l,(int)velocity_r,(int)velocity_l);
+	printf("%d,%d,%d,%d,%d,%d\r\n",(int)target_velocity_r,(int)target_velocity_l,(int)velocity_r,(int)velocity_l,(int)(1000*V_r),(int)(1000*V_l));
 
 }
 void Debug::Init(){
@@ -48,19 +48,48 @@ void Debug::Init(){
 }
 
 void Debug::Interrupt_1ms(){
-	t_ms++;
-	printf("t=%d\r\n",t_ms);
+	if(idle){
+		static int gesture_sensor_th=250;
+		if((mouse->wall_sensor->GetFrontR() > gesture_sensor_th || mouse->wall_sensor->GetFrontL() > gesture_sensor_th )){
+			gesture_flag=true;
+		}
+		if((no_hand_flag==false) && gesture_flag && (mouse->wall_sensor->GetFrontR()< gesture_sensor_th && mouse->wall_sensor->GetFrontL()< gesture_sensor_th )){
+			no_hand_flag=true;
+			mouse->buzzer->On_ms(500,50);
+		}
+		bool cal=false;
+		if(no_hand_flag)cal=mouse->imu->Calibration();
+		if(cal){
+			idle=false;
+			float v_max=500;
+			trajectory=std::unique_ptr<Line>(new Line(0.0, (3)*SECTION_WIDTH, 0.0, 0, v_max, 0,          5000, 0.0));
+		}
+	}else{
+		if(trajectory->Update()){
+			next_mode=modeSelect_mode;
+		}else{
 
-	mouse->motors->SetVoltageR(0.25);
-	mouse->motors->SetVoltageL(0.25);
+			trajectory->GetTargetPosition(&target_x, &target_y, &target_theta);
+			trajectory->GetTargetVelocity(&target_vx,&target_vy,&target_omega);
+			Jacobian(target_vy,target_omega,&target_velocity_r,&target_velocity_l);
 
-	mouse->log_data[mouse->log_index][0]=(int)(mouse->encorders->GetVelociryL_mm_s() );
-	mouse->log_data[mouse->log_index][1]=(int)(mouse->encorders->GetVelociryR_mm_s() );
-	mouse->log_index++;
+			mouse->motorR_PID->SetTarget(target_velocity_r);
+			mouse->motorL_PID->SetTarget(target_velocity_l);
 
-	if(t_ms>1000){
-		printf("deleat\r\n");
-		next_mode=modeSelect_mode;
+			velocity_r=mouse->encorders->GetVelociryR_mm_s();
+			velocity_l=mouse->encorders->GetVelociryL_mm_s();
+			V_r=mouse->motorR_PID->Update(velocity_r);
+			V_l=mouse->motorL_PID->Update(velocity_l);
+
+			mouse->motors->SetVoltageR(V_r);
+			mouse->motors->SetVoltageL(V_l);
+
+			mouse->log_data[mouse->log_index][0]=(int)(target_velocity_r );
+			mouse->log_data[mouse->log_index][1]=(int)(V_r*1000 );
+			mouse->log_data[mouse->log_index][2]=(int)(velocity_r );
+			mouse->log_index++;
+
+		}
 	}
 
 }

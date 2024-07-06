@@ -4,6 +4,7 @@
 
 #include "ModeSelectMode.hpp"
 #include "DebugMode.hpp"
+#include "SensorCheckMode.hpp"
 
 extern Mouse mouse;
 extern MachineMode* mode; 

@@ -177,15 +177,6 @@ public:
 
 
 };
-class SensorCheck:public MachineMode{
-public:
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	SensorCheck(Mouse* _mouse);
-	virtual ~SensorCheck(){};
-	float theta_gyro=0;
-};
 class LogOutput:public MachineMode{
 public:
 	void Loop();

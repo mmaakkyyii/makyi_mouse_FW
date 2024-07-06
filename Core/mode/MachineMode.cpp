@@ -2,7 +2,6 @@
 #include  <memory>
 #include "debug.hpp"
 #include "machine_paramater.h"
-#include "Jacobian.hpp"
 #include "clothoid_param.hpp"
 
 #include "MazeDef.hpp"
@@ -956,103 +955,6 @@ void DoNotRotate::Interrupt_1ms(){
 
 }
 /////////////////////////////
-SensorCheck::SensorCheck(Mouse* _mouse):MachineMode(_mouse){
-	current_mode=sensorCheck_mode;
-	next_mode=sensorCheck_mode;
-}
-
-float acc_data[3];
-
-void SensorCheck::Loop(){
-//	printf("\x1b[2J");		//�N���A�X�N���[��[CLS]
-//	printf("\x1b[0;0H");	//�J�[�\����0,0�Ɉړ�
-	float _x,_y,_theta;
-	mouse->localization->GetPosition(&_x, &_y, &_theta);
-
-//	printf("%4d,%4d,%4d\r\n",mouse->imu->GetGzOffset(),(int)( gyro_raw[2]),(int)(1000*gyro[2]));
-	/*
-		printf("%4d,%4d,%4d,%4d\r\n",
-				(int)(mouse->encorders->GetAngleL()),
-				(int)(mouse->encorders->GetAngleR()),
-				(int)(mouse->encorders->GetVelociryL_mm_s()),
-				(int)(mouse->encorders->GetVelociryR_mm_s())
-			);
-	//*/
-///*
-			printf("%4d,%4d,%4d,%4d, %5d,%5d\r\n",
-				mouse->wall_sensor->GetLeft(),
-				mouse->wall_sensor->GetFrontL(),
-				mouse->wall_sensor->GetFrontR(),
-				mouse->wall_sensor->GetRight(),
-				(int)(mouse->encorders->GetVelociryL_mm_s()),
-				(int)(mouse->encorders->GetVelociryR_mm_s())
-				);
-		//*/
-//	printf("%4d,%4d,%4d,%4d\r\n",
-//			(int)(mouse->encorders->GetAngleL()),
-//			(int)(mouse->encorders->GetAngleR()),
-//			(int)(mouse->encorders->GetVelociryL_mm_s()),
-//			(int)(mouse->encorders->GetVelociryR_mm_s())
-//		);
-
-}
-
-void SensorCheck::Init(){
-	mouse->motorR_PID->SetTarget(0);
-	mouse->motorL_PID->SetTarget(0);
-	printf("Start Sensor Check mode!\n\r");
-}
-void SensorCheck::Interrupt_1ms(){
-	mouse->imu->GetGyro(gyro);
-	theta_gyro+=(gyro[2]*0.001);
-	mouse->imu->GetAcc(acc_data);
-	float acc_th=1000;
-	if(acc_data[0]*acc_data[0]+acc_data[1]*acc_data[1]>acc_th){
-		mouse->buzzer->On_ms(3000,10);
-		next_mode=modeSelect_mode;
-
-	}
-
-	if(mouse->wall_sensor->GetWallFR() || mouse->wall_sensor->GetWallFL()){
-//			mouse->motorR_PID->SetTarget(0);
-//			mouse->motorL_PID->SetTarget(0);
-	}else if(mouse->wall_sensor->GetWallL()){
-//		mouse->motorR_PID->SetTarget(500);
-//		mouse->motorL_PID->SetTarget(500);
-	}
-	mouse->motorR_PID->SetTarget(500);
-	mouse->motorL_PID->SetTarget(500);
-
-	float velocity_r=mouse->encorders->GetVelociryR_mm_s();
-	float velocity_l=mouse->encorders->GetVelociryL_mm_s();
-	float V_r=mouse->motorR_PID->Update(velocity_r);
-	float V_l=mouse->motorL_PID->Update(velocity_l);
-	float v_max=1.5;
-	if(V_r>v_max)V_r=v_max;
-	if(V_r<-v_max)V_r=-v_max;
-	if(V_l>v_max)V_l=v_max;
-	if(V_l<-v_max)V_l=-v_max;
-//	mouse->motors->SetVoltageR(V_r);
-//	mouse->motors->SetVoltageL(V_l);
-	mouse->motors->SetVoltageR(0);
-	mouse->motors->SetVoltageL(0);
-
-	static int led=1;
-	led=1-led;
-	mouse->ui->SetLED( mouse->wall_sensor->GetWallR() <<0 |
-			mouse->wall_sensor->GetWallFR()<<1 |
-			mouse->wall_sensor->GetWallFL()<<2 |
-			mouse->wall_sensor->GetWallL()<<3       );
-
-	static int pre_sw1=mouse->ui->GetSW1();
-
-	if(pre_sw1==1 && mouse->ui->GetSW1()==0){
-		mouse->buzzer->On_ms(3000,10);
-		next_mode=modeSelect_mode;
-	}
-
-};
-
 /////////////////////////////
 void ParameterSetting::Loop(){
 	printf("%d (%d,%d)\r\n",mode,x,y);

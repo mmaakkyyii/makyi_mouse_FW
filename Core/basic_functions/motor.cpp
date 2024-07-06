@@ -2,7 +2,7 @@
 #include "tim.h"
 
 Motors::Motors(){
-	Vin=3.0;
+	Vin=4.0;
 }
 void Motors::Init(){
 	InitMotorL();
