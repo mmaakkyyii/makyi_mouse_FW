@@ -37,7 +37,7 @@ public:
 	int IsOtherMode(){return 0;};
 	void CheckBattery(){
 		float V=mouse->battery_check->GetBatteryVoltage_V();
-		if(V < 0.1){
+		if(V < 0){
 			low_batt_count++;
 		}else{
 			low_batt_count=0;

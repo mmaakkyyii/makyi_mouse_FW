@@ -58,3 +58,6 @@ void Loop(){
 void Interrupt1ms(){
 	int_1ms();
 }
+void Interrupt125us(){
+	int_125ums();
+}

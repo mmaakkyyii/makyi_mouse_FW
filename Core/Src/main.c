@@ -110,6 +110,7 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM16_Init();
   MX_ADC1_Init();
+  MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
   Init();
 

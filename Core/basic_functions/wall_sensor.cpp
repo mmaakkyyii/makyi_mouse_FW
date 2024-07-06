@@ -35,55 +35,68 @@ int WallSensor::GetError(){
 }
 
 uint16_t ReadADC(int ch){
-
+//*
 	ADC_ChannelConfTypeDef sConfig = {0};
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-
+	//sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SingleDiff = ADC_SINGLE_ENDED;
+	sConfig.OffsetNumber = ADC_OFFSET_NONE;
+	sConfig.Offset = 0;
 	switch(ch){
 	case 1:
 		sConfig.Channel = ADC_CHANNEL_0;
-		//sConfig.Rank = ADC_REGULAR_RANK_1;
+		sConfig.Rank = ADC_REGULAR_RANK_1;
 		break;
 	case 2:
 		sConfig.Channel = ADC_CHANNEL_11;
-		//sConfig.Rank = ADC_REGULAR_RANK_2;
+		sConfig.Rank = ADC_REGULAR_RANK_1;
 		break;
 	case 3:
 		sConfig.Channel = ADC_CHANNEL_13;
-		//sConfig.Rank = ADC_REGULAR_RANK_3;
+		sConfig.Rank = ADC_REGULAR_RANK_1;
 		break;
 	case 4:
 		sConfig.Channel = ADC_CHANNEL_14;
-		//sConfig.Rank = ADC_REGULAR_RANK_4;
+		sConfig.Rank = ADC_REGULAR_RANK_1;
 		break;
 	}
-	sConfig.SamplingTime = ADC_SAMPLETIME_12CYCLES_5;
+	sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
 	if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) !=HAL_OK){
 		Error_Handler();
 	}
+//	*/
+	uint16_t data=-1;
 	if(HAL_ADC_Start(&hadc1) == HAL_OK){
 		if (HAL_ADC_PollForEvent(&hadc1,ADC_EOSMP_EVENT, 200) == HAL_OK){
-			//while(HAL_ADC_GetState(&hadc1)==HAL_ADC_STATE_BUSY){
-			//}
-			uint16_t data=HAL_ADC_GetValue(&hadc1);
+			data=HAL_ADC_GetValue(&hadc1);
 			//HAL_ADC_Stop(&hadc1);
-			return data;
 		}
-
 	}
+	//HAL_ADC_Stop(&hadc1);
 
-	return -1;
+	return data;
 }
 
 void WallSensor::Update(){
 	static int state = 0;		//�ǂݍ��ރZ���T�̃��[�e�[�V�����Ǘ��p�ϐ�
 	//int i;
-	int loop_num=50;
+	int loop_num=1;
+	static int pre=0;
 	switch(state)
 	{
 		case 1:
+			if(pre==0){
+				for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_SET);
+				ReadADC(3);//3
+				HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
+				pre=1;
+				break;
+			}else{
+				state++;
+				pre=0;
+			}
+
 			for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_SET);
-			right= ReadADC(2);
+			right= ReadADC(3);//3
 			HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
 			pre_right = right;			//�ߋ��̒l��ۑ�
 			if(right > TH_SEN_R)is_wallR = 1;
@@ -98,7 +111,17 @@ void WallSensor::Update(){
 			}			
 			break;
 
-		case 3:
+		case 0:
+			if(pre==0){
+				for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_FL_GPIO_Port, LED_FL_Pin, GPIO_PIN_SET);
+				ReadADC(4);//4
+				HAL_GPIO_WritePin(LED_FL_GPIO_Port, LED_FL_Pin, GPIO_PIN_RESET);
+				pre=1;
+				break;
+			}else{
+				state++;
+				pre=0;
+			}
 			for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_FL_GPIO_Port, LED_FL_Pin, GPIO_PIN_SET);
 			frontL= ReadADC(4);//4
 			HAL_GPIO_WritePin(LED_FL_GPIO_Port, LED_FL_Pin, GPIO_PIN_RESET);
@@ -107,18 +130,38 @@ void WallSensor::Update(){
 			else				  is_wallFL = 0;
 			break;
 
-		case 0:
+		case 2:
+			if(pre==0){
+				for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_FR_GPIO_Port, LED_FR_Pin, GPIO_PIN_SET);
+				ReadADC(2);//2
+				HAL_GPIO_WritePin(LED_FR_GPIO_Port, LED_FR_Pin, GPIO_PIN_RESET);
+				pre=1;
+				break;
+			}else{
+				state++;
+				pre=0;
+			}
 			for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_FR_GPIO_Port, LED_FR_Pin, GPIO_PIN_SET);
-			frontR= ReadADC(1);//
+			frontR= ReadADC(2);//2
 			HAL_GPIO_WritePin(LED_FR_GPIO_Port, LED_FR_Pin, GPIO_PIN_RESET);
 			pre_frontR = frontR;
 			if(frontR > TH_SEN_FR)is_wallFR = 1;
 			else				  is_wallFR = 0;
 			break;
 
-		case 2:
+		case 3:
+			if(pre==0){
+				for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_L_GPIO_Port, LED_L_Pin, GPIO_PIN_SET);
+				ReadADC(1);//1
+				HAL_GPIO_WritePin(LED_L_GPIO_Port, LED_L_Pin, GPIO_PIN_RESET);
+				pre=1;
+				break;
+			}else{
+				state++;
+				pre=0;
+			}
 			for(int i=0;i<loop_num;i++)HAL_GPIO_WritePin(LED_L_GPIO_Port, LED_L_Pin, GPIO_PIN_SET);
-			left= ReadADC(3);
+			left= ReadADC(1);//1
 			HAL_GPIO_WritePin(LED_L_GPIO_Port, LED_L_Pin, GPIO_PIN_RESET);
 			pre_left = left;			//�ߋ��̒l��ۑ�
 			if(left > TH_SEN_L)is_wallL = 1;
@@ -134,7 +177,6 @@ void WallSensor::Update(){
 			break;
 	}
 	
-	state++;		//�S�񂲂ƂɌJ��Ԃ�
 	if(state > 3)
 	{
 		state = 0;

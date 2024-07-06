@@ -979,12 +979,7 @@ void SensorCheck::Loop(){
 			);
 	//*/
 ///*
-			printf("%4d,%4d,%4d,%4d,%4d,%d,%d,%d,%d,%5d,%5d\r\n",
-				(int)(acc_data[0]*acc_data[0]+acc_data[1]*acc_data[1]),
-				(int)(acc_data[0]*1000),
-				(int)(acc_data[1]*1000),
-				(int)(theta_gyro),
-				(int)(1000*mouse->battery_check->GetBatteryVoltage_V()),
+			printf("%4d,%4d,%4d,%4d, %5d,%5d\r\n",
 				mouse->wall_sensor->GetLeft(),
 				mouse->wall_sensor->GetFrontL(),
 				mouse->wall_sensor->GetFrontR(),
@@ -1044,12 +1039,14 @@ void SensorCheck::Interrupt_1ms(){
 
 	static int led=1;
 	led=1-led;
-	mouse->ui->SetLED( mouse->wall_sensor->GetWallR() <<3 |
-			mouse->wall_sensor->GetWallFR()<<2 |
-			mouse->wall_sensor->GetWallFL()<<1 |
-			mouse->wall_sensor->GetWallL()       );
+	mouse->ui->SetLED( mouse->wall_sensor->GetWallR() <<0 |
+			mouse->wall_sensor->GetWallFR()<<1 |
+			mouse->wall_sensor->GetWallFL()<<2 |
+			mouse->wall_sensor->GetWallL()<<3       );
 
-	if(mouse->ui->GetSW1()==0){
+	static int pre_sw1=mouse->ui->GetSW1();
+
+	if(pre_sw1==1 && mouse->ui->GetSW1()==0){
 		mouse->buzzer->On_ms(3000,10);
 		next_mode=modeSelect_mode;
 	}

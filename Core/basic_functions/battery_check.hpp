@@ -12,7 +12,7 @@ public:
 private:
 	float R1=6.8;
 	float R2=15;
-	uint16_t adc_val[1];
+	uint32_t adc_val[1];
 };
 
 #endif //_BATTERY_CHECK_HPP_

@@ -27,10 +27,10 @@ private:
 	static const int TH_CTRL_R = 40;	//�ǂ����邩�ۂ���臒l
 	static const int TH_CTRL_L = 40;	//�ǂ����邩�ۂ���臒l
 
-	static const int TH_SEN_R = 50;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_L = 50;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FR = 70;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FL = 70;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_R = 100;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_L = 100;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FR = 100;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FL = 100;	//�ǂ����邩�ۂ���臒l
 
 
 

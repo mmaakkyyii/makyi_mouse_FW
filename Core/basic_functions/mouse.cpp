@@ -151,7 +151,7 @@ void Mouse::Interrupt_1ms(){
 void Mouse::Interrupt_125us(){
 	wall_sensor->Update();
 	battery_check->Update();
-	motors->SetSupplayVoltage(battery_check->GetBatteryVoltage_V());
+//	motors->SetSupplayVoltage(battery_check->GetBatteryVoltage_V());
 	ui->Update();
 
 }
