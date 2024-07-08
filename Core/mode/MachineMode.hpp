@@ -68,14 +68,7 @@ public:
 	};
 	virtual ~Idle(){};
 };
-class LowBattery:public MachineMode{
-public:
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	LowBattery(Mouse* _mouse);
-	virtual ~LowBattery(){};
-};
+
 class SerchRun:public MachineMode{
 public:
 	void Loop();

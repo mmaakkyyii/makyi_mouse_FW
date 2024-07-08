@@ -6,7 +6,7 @@
 #include "DebugMode.hpp"
 #include "SensorCheckMode.hpp"
 #include "DoNotRotateMode.hpp"
-
+#include "LowBatteryMode.hpp"
 extern Mouse mouse;
 extern MachineMode* mode; 
 void int_1ms(){
