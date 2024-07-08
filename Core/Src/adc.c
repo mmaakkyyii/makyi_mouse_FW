@@ -26,6 +26,8 @@
 
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
+DMA_NodeTypeDef Node_GPDMA1_Channel2;
+DMA_QListTypeDef List_GPDMA1_Channel2;
 DMA_HandleTypeDef handle_GPDMA1_Channel2;
 
 /* ADC1 init function */
@@ -105,7 +107,7 @@ void MX_ADC2_Init(void)
   hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc2.Init.LowPowerAutoWait = DISABLE;
-  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = ENABLE;
   hadc2.Init.NbrOfConversion = 1;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -143,6 +145,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  DMA_NodeConfTypeDef NodeConfig= {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   if(adcHandle->Instance==ADC1)
   {
@@ -219,21 +222,49 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 
     /* ADC2 DMA Init */
     /* GPDMA1_REQUEST_ADC2 Init */
+    NodeConfig.NodeType = DMA_GPDMA_LINEAR_NODE;
+    NodeConfig.Init.Request = GPDMA1_REQUEST_ADC2;
+    NodeConfig.Init.BlkHWRequest = DMA_BREQ_SINGLE_BURST;
+    NodeConfig.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    NodeConfig.Init.SrcInc = DMA_SINC_FIXED;
+    NodeConfig.Init.DestInc = DMA_DINC_FIXED;
+    NodeConfig.Init.SrcDataWidth = DMA_SRC_DATAWIDTH_WORD;
+    NodeConfig.Init.DestDataWidth = DMA_DEST_DATAWIDTH_WORD;
+    NodeConfig.Init.SrcBurstLength = 1;
+    NodeConfig.Init.DestBurstLength = 1;
+    NodeConfig.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT0;
+    NodeConfig.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
+    NodeConfig.Init.Mode = DMA_NORMAL;
+    NodeConfig.TriggerConfig.TriggerPolarity = DMA_TRIG_POLARITY_MASKED;
+    NodeConfig.DataHandlingConfig.DataExchange = DMA_EXCHANGE_NONE;
+    NodeConfig.DataHandlingConfig.DataAlignment = DMA_DATA_RIGHTALIGN_ZEROPADDED;
+    if (HAL_DMAEx_List_BuildNode(&NodeConfig, &Node_GPDMA1_Channel2) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    if (HAL_DMAEx_List_InsertNode(&List_GPDMA1_Channel2, NULL, &Node_GPDMA1_Channel2) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    if (HAL_DMAEx_List_SetCircularMode(&List_GPDMA1_Channel2) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
     handle_GPDMA1_Channel2.Instance = GPDMA1_Channel2;
-    handle_GPDMA1_Channel2.Init.Request = GPDMA1_REQUEST_ADC2;
-    handle_GPDMA1_Channel2.Init.BlkHWRequest = DMA_BREQ_SINGLE_BURST;
-    handle_GPDMA1_Channel2.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    handle_GPDMA1_Channel2.Init.SrcInc = DMA_SINC_FIXED;
-    handle_GPDMA1_Channel2.Init.DestInc = DMA_DINC_FIXED;
-    handle_GPDMA1_Channel2.Init.SrcDataWidth = DMA_SRC_DATAWIDTH_BYTE;
-    handle_GPDMA1_Channel2.Init.DestDataWidth = DMA_DEST_DATAWIDTH_BYTE;
-    handle_GPDMA1_Channel2.Init.Priority = DMA_LOW_PRIORITY_LOW_WEIGHT;
-    handle_GPDMA1_Channel2.Init.SrcBurstLength = 1;
-    handle_GPDMA1_Channel2.Init.DestBurstLength = 1;
-    handle_GPDMA1_Channel2.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT0;
-    handle_GPDMA1_Channel2.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
-    handle_GPDMA1_Channel2.Init.Mode = DMA_NORMAL;
-    if (HAL_DMA_Init(&handle_GPDMA1_Channel2) != HAL_OK)
+    handle_GPDMA1_Channel2.InitLinkedList.Priority = DMA_LOW_PRIORITY_LOW_WEIGHT;
+    handle_GPDMA1_Channel2.InitLinkedList.LinkStepMode = DMA_LSM_FULL_EXECUTION;
+    handle_GPDMA1_Channel2.InitLinkedList.LinkAllocatedPort = DMA_LINK_ALLOCATED_PORT0;
+    handle_GPDMA1_Channel2.InitLinkedList.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
+    handle_GPDMA1_Channel2.InitLinkedList.LinkedListMode = DMA_LINKEDLIST_CIRCULAR;
+    if (HAL_DMAEx_List_Init(&handle_GPDMA1_Channel2) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    if (HAL_DMAEx_List_LinkQ(&handle_GPDMA1_Channel2, &List_GPDMA1_Channel2) != HAL_OK)
     {
       Error_Handler();
     }

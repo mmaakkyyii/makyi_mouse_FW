@@ -16,7 +16,8 @@ void SensorCheck::Loop(){
 			);
 	//*/
 ///*
-			printf("%4d,%4d,%4d,%4d, %5d,%5d\r\n",
+			printf("%4d|%4d,%4d,%4d,%4d, %5d,%5d\r\n",
+				(int)(1000*mouse->battery_check->GetBatteryVoltage_V()),
 				mouse->wall_sensor->GetLeft(),
 				mouse->wall_sensor->GetFrontL(),
 				mouse->wall_sensor->GetFrontR(),

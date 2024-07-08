@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "flash.h"
 #include "gpdma.h"
 #include "icache.h"
 #include "memorymap.h"
@@ -111,6 +112,7 @@ int main(void)
   MX_TIM16_Init();
   MX_ADC1_Init();
   MX_TIM17_Init();
+  MX_FLASH_Init();
   /* USER CODE BEGIN 2 */
   Init();
 

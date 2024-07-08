@@ -49,14 +49,14 @@ void FlashSetData(int maze_data[MAZESIZE_X][MAZESIZE_Y],int param_data[param_dat
 			else data64bit2|=(uint64_t)maze_data[x][y]<<(8*(x-8));
 //			i++;
 		}
-	//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, start_addr+(y*MAZESIZE_X), data64bit1);
-	//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, start_addr+(y*MAZESIZE_X)+8, data64bit2);
+//		HAL_FLASH_Program(FLASH_TYPEPROGRAM_QUADWORD, start_addr+(y*MAZESIZE_X), data64bit1);
+//		HAL_FLASH_Program(FLASH_TYPEPROGRAM_QUADWORD, start_addr+(y*MAZESIZE_X)+8, data64bit2);
 	}
 	uint64_t data64bit3=0;
 	for(int i=0;i<param_data_num;i++){
 		data64bit3|=(uint64_t)param_data[i]<<(8*i);
 	}
-	//HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, start_addr+(MAZESIZE_X*MAZESIZE_Y), data64bit3);
+//	HAL_FLASH_Program(FLASH_TYPEPROGRAM_QUADWORD, start_addr+(MAZESIZE_X*MAZESIZE_Y), data64bit3);
 
 	HAL_FLASH_Lock();
 }

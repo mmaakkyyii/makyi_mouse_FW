@@ -21,16 +21,16 @@ public:
 private:
 	static const int WAITLOOP_SLED = 300;	//LED�����点�Ă���AD�ϊ����J�n����܂ł̎��ԉ҂��p�萔
 
-	static const int REF_SEN_R = 150;//
-	static const int REF_SEN_L = 150;//
+	static const int REF_SEN_R = 2100;//
+	static const int REF_SEN_L = 2100;//
 
-	static const int TH_CTRL_R = 40;	//�ǂ����邩�ۂ���臒l
-	static const int TH_CTRL_L = 40;	//�ǂ����邩�ۂ���臒l
+	static const int TH_CTRL_R = 1300;	//�ǂ����邩�ۂ���臒l
+	static const int TH_CTRL_L = 1300;	//�ǂ����邩�ۂ���臒l
 
-	static const int TH_SEN_R = 100;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_L = 100;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FR = 100;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FL = 100;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_R = 250;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_L = 250;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FR = 250;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FL = 250;	//�ǂ����邩�ۂ���臒l
 
 
 

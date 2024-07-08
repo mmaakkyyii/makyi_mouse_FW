@@ -37,7 +37,7 @@ public:
 	int IsOtherMode(){return 0;};
 	void CheckBattery(){
 		float V=mouse->battery_check->GetBatteryVoltage_V();
-		if(V < 0){
+		if(V < 3.5){
 			low_batt_count++;
 		}else{
 			low_batt_count=0;
@@ -160,23 +160,7 @@ public:
 
 };
 
-class DoNotRotate:public MachineMode{
-public:
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	DoNotRotate(Mouse* _mouse);
-	virtual ~DoNotRotate(){};
-	
-	float gyro_theta;
-	float omega_z;
 
-	bool idle;
-	int gesture_flag;
-	int no_hand_flag;
-
-
-};
 class LogOutput:public MachineMode{
 public:
 	void Loop();

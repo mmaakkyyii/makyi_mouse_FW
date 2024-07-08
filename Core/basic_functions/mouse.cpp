@@ -54,14 +54,18 @@ void Mouse::Init(){
 
 	int map_data[MAZESIZE_X][MAZESIZE_Y]={0};
 	int param_data[param_data_num]={0};
-	FlashGetData(map_data,param_data);
-	goal_pos_x=FlashGetGoalX();
-	goal_pos_y=FlashGetGoalY();
+//	FlashGetData(map_data,param_data);
+//	goal_pos_x=FlashGetGoalX();
+//	goal_pos_y=FlashGetGoalY();
+	goal_pos_x=3;
+	goal_pos_y=3;
 //	FlashSetMazeData(map_data);
 //	FlashGetMazeData(map_data);
 	maze_solver->Init();
+	maze_solver->adachi.InitMaze(UNKNOWN, map_data);
+
 	//maze_solver->adachi.InitMaze(UNKNOWN,map_data);
-	maze_solver->adachi.SetMapArray(map_data);
+//	maze_solver->adachi.SetMapArray(map_data);
 	FlashPrintMazeData(map_data);
 	mouse_pos_x=0;
 	mouse_pos_y=0;
@@ -151,7 +155,7 @@ void Mouse::Interrupt_1ms(){
 void Mouse::Interrupt_125us(){
 	wall_sensor->Update();
 	battery_check->Update();
-//	motors->SetSupplayVoltage(battery_check->GetBatteryVoltage_V());
+	motors->SetSupplayVoltage(battery_check->GetBatteryVoltage_V());
 	ui->Update();
 
 }
