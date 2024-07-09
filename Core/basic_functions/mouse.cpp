@@ -50,17 +50,29 @@ void Mouse::Init(){
 	imu->Init();
 	
 	battery_check->Update();
+	printf("Start\r\n");
 
 
 	int map_data[MAZESIZE_X][MAZESIZE_Y]={0};
 	int param_data[param_data_num]={0};
-//	FlashGetData(map_data,param_data);
+	FlashGetData(map_data,param_data);
+	FlashPrintMazeData(map_data);
+	printf("v erase\r\n");
+
+	FlashEraseData();
+	FlashGetData(map_data,param_data);
+	FlashPrintMazeData(map_data);
+
+	printf("v test\r\n");
+
+	FlashTest();
+	FlashGetData(map_data,param_data);
+
 //	goal_pos_x=FlashGetGoalX();
 //	goal_pos_y=FlashGetGoalY();
 	goal_pos_x=3;
 	goal_pos_y=3;
-//	FlashSetMazeData(map_data);
-//	FlashGetMazeData(map_data);
+
 	maze_solver->Init();
 	maze_solver->adachi.InitMaze(UNKNOWN, map_data);
 
@@ -85,11 +97,8 @@ void Mouse::Init(){
 	buzzer->Off();		//�u�U�[�̔��U���~������	
 
 	printf("Battery %d mV: goal(%d,%d)|\r\n",(int)(battery_check->GetBatteryVoltage_V()*1000),goal_pos_x,goal_pos_y);
-	//FlashSetMazeData(maze_solver->adachi.map);
-	//FlashPrintMazeData(maze_solver->adachi.map);
 
-//	delete trajectory;
-//	trajectory=new Line(0.0, 180.0/2, 0.0, 0, v_max, v_max, 10000.0, 0.0);
+
 	mouse_pos_y++;
 
 	timer_start();

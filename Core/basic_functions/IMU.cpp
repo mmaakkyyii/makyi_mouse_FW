@@ -134,7 +134,7 @@ void IMU::GetAccRaw(short * acc){
 	acc[1]=acc_data[1];
 	acc[2]=acc_data[2];
 }
-void IMU::GetGyro(float * gyro){
+void IMU::GetGyro(float * gyro){//[deg/s]
 	gyro[0]=(float)gyro_data[0]/32768.0*GYRO_FS;
 	gyro[1]=(float)gyro_data[1]/32768.0*GYRO_FS;
 	gyro[2]=(float)gyro_data[2]/32768.0*GYRO_FS;

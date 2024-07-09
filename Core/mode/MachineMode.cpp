@@ -281,7 +281,7 @@ void SerchRun::Init(){
 
 
 void SerchRun::Interrupt_1ms(){
-	static float thetaa=0;
+	static float theta_rad=0;
 	static float sum_theta=0;
 	static int log_index=0;
 
@@ -373,7 +373,7 @@ void SerchRun::Interrupt_1ms(){
 			trajectory = std::unique_ptr<Trajectory>(trajectryUpdate(mouse,clothoid));
 			//trajectory =std::unique_ptr<Line>(new Line(0.0, SECTION_WIDTH, 0.0, v_max, v_max, v_max, 10000.0, 0.0));
 
-			thetaa=0;
+			theta_rad=0;
 			sum_theta=0;
 			log_index=0;
 			mouse->motors->SetVoltageR(V_r);
@@ -394,16 +394,15 @@ void SerchRun::Interrupt_1ms(){
 			static float Ki_theta=0.0;
 			
 			mouse->imu->GetGyro(gyro);
-			thetaa+=gyro[2]*3.14/180.0*0.001;
-
-			float e_theta=target_theta-thetaa;
+			theta_rad+=gyro[2]*3.14/180.0*0.001;
+			float e_theta=target_theta-theta_rad;
 			sum_theta+=e_theta;
 			if(trajectory->GetTragType()==rotate){
 
 				target_omega+= Kp_theta*e_theta + Ki_theta*sum_theta;
 				if(mouse->log_index < mouse->log_data_num-1){
 					mouse->log_data[mouse->log_index][0]=(int)(target_theta*1000);
-					mouse->log_data[mouse->log_index][1]=(int)(thetaa*1000);
+					mouse->log_data[mouse->log_index][1]=(int)(theta_rad*1000);
 					mouse->log_index++;
 				}
 			}else if(flash_flag==true && trajectory->GetTragType()==stay){
@@ -414,7 +413,7 @@ void SerchRun::Interrupt_1ms(){
 
 			}else{
 				sum_theta=0;
-				thetaa=0;
+				theta_rad=0;
 			}
 			
 			Jacobian(target_vy,target_omega,&target_velocity_r,&target_velocity_l);
@@ -441,6 +440,14 @@ void SerchRun::Interrupt_1ms(){
 		}
 
 	}
+	if(gyro[2]>1000 || gyro[2]<-1000){
+		next_mode=modeSelect_mode;
+
+		mouse->motors->SetVoltageR(V_r);
+		mouse->motors->SetVoltageL(V_l);
+
+	}
+
 	if(end_serch_flag){
 		next_mode=modeSelect_mode;
 	}
@@ -484,7 +491,7 @@ crash_en(false)
 };
 void FastRun::Loop(){
 	if(mouse->ui->GetSW2()==0 && mouse->ui->GetSW1()==0){
-		mouse->buzzer->On_ms(3000,100);
+		mouse->buzzer->On_ms(300,100);
 		next_mode=modeSelect_mode;
 	}
 
@@ -501,7 +508,7 @@ void FastRun::Init(){
 	if(goal_flag==false && FlashGetGoalFlag()==0){
 		current_mode=fastRun_mode;
 		next_mode=modeSelect_mode;
-		mouse->buzzer->On_ms(2500,400);
+		mouse->buzzer->On_ms(250,400);
 		return;	
 	}
 	current_mode=fastRun_mode;
