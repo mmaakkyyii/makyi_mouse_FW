@@ -24,8 +24,8 @@ bool goal_flag=false;
 float gyro[3];
 int gyro_raw[3];
 
-float Kp_wall=0.004;//0.004
-float Kd_wall=0.0001;//0.0003
+float Kp_wall=0.002;//0.004
+float Kd_wall=0.00001;//0.0003
 const float Kp_omega=0.0005;//0.001
 const float crash_acc=45.0*2;
 
@@ -490,10 +490,7 @@ crash_en(false)
 
 };
 void FastRun::Loop(){
-	if(mouse->ui->GetSW2()==0 && mouse->ui->GetSW1()==0){
-		mouse->buzzer->On_ms(300,100);
-		next_mode=modeSelect_mode;
-	}
+
 
 	if(idle){
 	//	printf("%d,%d,%d,%d\r\n",(int)clothoid.v,(int)clothoid.in_mm,(int)clothoid.out_mm);
@@ -973,8 +970,8 @@ void ResetMap::Init(){
 	mouse->maze_solver->adachi.InitMaze(UNKNOWN, map_data);
 		int param_data[param_data_num]={0,goal_x_setting,goal_y_setting,0,0,0,0,0};
 
-		//FlashSetData(mouse->maze_solver->adachi.map,param_data);
-	//FlashPrintMazeData(mouse->maze_solver->adachi.map);
+		FlashSetData(mouse->maze_solver->adachi.map,param_data);
+	//	FlashPrintMazeData(mouse->maze_solver->adachi.map);
 
 };
 void ResetMap::Interrupt_1ms(){

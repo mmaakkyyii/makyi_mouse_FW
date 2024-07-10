@@ -80,8 +80,9 @@ void FlashSetData(int maze_data[MAZESIZE_X][MAZESIZE_Y],int param_data[param_dat
 }
 
 void FlashSetGoalFlag(bool flag){
+	uint64_t data=flag;
 	HAL_FLASH_Unlock();
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_QUADWORD, start_addr+(MAZESIZE_Y*MAZESIZE_X)+8+8, flag);
+	HAL_FLASH_Program(FLASH_TYPEPROGRAM_QUADWORD, start_addr+(MAZESIZE_Y*MAZESIZE_X)+8+8,(uint32_t)&data);
 	HAL_FLASH_Lock();
 }
 

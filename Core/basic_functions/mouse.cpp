@@ -56,28 +56,16 @@ void Mouse::Init(){
 	int map_data[MAZESIZE_X][MAZESIZE_Y]={0};
 	int param_data[param_data_num]={0};
 	FlashGetData(map_data,param_data);
-	FlashPrintMazeData(map_data);
-	printf("v erase\r\n");
 
-	FlashEraseData();
-	FlashGetData(map_data,param_data);
-	FlashPrintMazeData(map_data);
-
-	printf("v test\r\n");
-
-	FlashTest();
-	FlashGetData(map_data,param_data);
-
-//	goal_pos_x=FlashGetGoalX();
-//	goal_pos_y=FlashGetGoalY();
-	goal_pos_x=3;
-	goal_pos_y=3;
+	goal_pos_x=FlashGetGoalX();
+	goal_pos_y=FlashGetGoalY();
+//	goal_pos_x=3;
+//	goal_pos_y=3;
 
 	maze_solver->Init();
 	maze_solver->adachi.InitMaze(UNKNOWN, map_data);
 
-	//maze_solver->adachi.InitMaze(UNKNOWN,map_data);
-//	maze_solver->adachi.SetMapArray(map_data);
+
 	FlashPrintMazeData(map_data);
 	mouse_pos_x=0;
 	mouse_pos_y=0;
