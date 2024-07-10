@@ -43,6 +43,9 @@ void FlashTest(){
 	HAL_FLASH_Lock();
 }
 
+void FlashUpdateData(){
+	memcpy(flash_data,(uint32_t*)start_addr,MAZESIZE_X*MAZESIZE_Y+param_data_num);
+}
 void FlashGetData(int maze_data[MAZESIZE_X][MAZESIZE_Y],int param_data[param_data_num]){
 
 	memcpy(flash_data,(uint32_t*)start_addr,MAZESIZE_X*MAZESIZE_Y+param_data_num);

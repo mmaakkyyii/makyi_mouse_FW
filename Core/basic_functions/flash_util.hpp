@@ -10,6 +10,7 @@ const uint8_t param_data_num=8;
 void FlashTest();
 void FlashInit();
 uint32_t FlashEraseData();
+void FlashUpdateData();
 void FlashGetData(int maze_data[MAZESIZE_X][MAZESIZE_Y],int param_data[param_data_num]);
 void FlashSetData(int maze_data[MAZESIZE_X][MAZESIZE_Y],int param_data[param_data_num]);
 void FlashPrintMazeData(int data[MAZESIZE_X][MAZESIZE_Y]);

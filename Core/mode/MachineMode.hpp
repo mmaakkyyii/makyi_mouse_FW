@@ -4,6 +4,7 @@
 #include "mouse.hpp"
 #include <memory>
 #include "flash_util.hpp"
+#include "clothoid_param.hpp"
 
 typedef enum {
 	none_mode=-1,
@@ -101,42 +102,6 @@ private:
 	
 	
 	//WallMask wall_mask;
-};
-class FastRun:public MachineMode{
-public:
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	FastRun(Mouse* _mouse);
-	virtual ~FastRun(){};
-private:
-	std::unique_ptr<Trajectory> trajectory;
-	clothoid_params clothoid;
-	char setting_mode;
-	char vel_mode;
-	char sla_mode;
-	float velocity_l,velocity_r;
-	float target_velocity_l,target_velocity_r;
-
-	float V_r;
-	float V_l;
-	
-	float target_x,target_y,target_theta;
-	float current_x,current_y,current_theta;
-	float target_vx,target_vy,target_omega;
-	float current_vx,current_vy,current_omega;
-
-	int gesture_flag;
-	int no_hand_flag;
-	int timer;
-	
-	bool goal;
-
-	bool idle;
-	int path_length;
-	int path_index;
-	bool crash_en;
-
 };
 class ParameterSetting:public MachineMode{
 public:
