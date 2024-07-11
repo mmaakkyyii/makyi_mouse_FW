@@ -1,5 +1,14 @@
 #include "clothoid_param.hpp"
 
+clothoid_params clothoid_200mm_45deg{
+0.1,
+0.1571,
+0.2571,
+5,
+200,
+18.5469,
+36.4866
+};
 
 clothoid_params clothoid_200mm_90deg_1={
 0.049889357,

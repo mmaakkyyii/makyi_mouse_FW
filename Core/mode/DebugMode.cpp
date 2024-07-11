@@ -62,7 +62,21 @@ void Debug::Interrupt_1ms(){
 		if(cal){
 			idle=false;
 			float v_max=500;
-			trajectory=std::unique_ptr<Line>(new Line(0.0, (3)*SECTION_WIDTH, 0.0, 0, v_max, 0,          5000, 0.0));
+			clothoid=clothoid_200mm_45deg;
+
+
+			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+					new MultTrajectory(
+							new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, clothoid.v, clothoid.v, 2000, 0.0),
+							new Clothoid(clothoid,1),
+							new Line(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0)
+					),
+					new MultTrajectory(
+							new Line(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0),
+							new Clothoid(clothoid,-1),
+							new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
+					)
+					));
 		}
 	}else{
 		if(trajectory->Update()){
