@@ -8,7 +8,7 @@
 #include "DoNotRotateMode.hpp"
 #include "LowBatteryMode.hpp"
 #include "FastRunMode.hpp"
-
+#include "DigoRun.hpp"
 
 extern Mouse mouse;
 extern MachineMode* mode; 
@@ -42,6 +42,11 @@ void int_1ms(){
 		case fastRun_mode:
 			delete mode;
 			mode = new FastRun(&mouse);
+			mode->Init();
+			break;
+		case digoRun_mode:
+			delete mode;
+			mode = new DigoRun(&mouse);
 			mode->Init();
 			break;
 		case parameterSetting_mode:

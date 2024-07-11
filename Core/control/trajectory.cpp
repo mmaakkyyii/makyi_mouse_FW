@@ -318,6 +318,12 @@ int Line::Update(){
 	t_s+=period_s;
 	return is_finish;
 }
+LineWoWall::LineWoWall(float _x, float _y, float _theta, float _v0, float _vmax, float _vf, float _a, float _j)
+:Line( _x,  _y,  _theta,  _v0,  _vmax,  _vf,  _a,  _j)
+{
+	traj_type=line_wo_wall;
+}
+
 
 Clothoid::Clothoid(clothoid_params params,int _cw_ccw){
 	traj_type=clothoid;

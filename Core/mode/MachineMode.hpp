@@ -13,11 +13,12 @@ typedef enum {
 	modeSelect_mode=2,
 	serchRun_mode=3,
 	fastRun_mode=4,
-	parameterSetting_mode=5,
-	sensorCheck_mode=6,
-	debug_mode=7,
-	doNotRotate_mode=8,
-	logOutput_mode=9,
+	digoRun_mode=5,
+	parameterSetting_mode=6,
+	sensorCheck_mode=7,
+	debug_mode=8,
+	doNotRotate_mode=9,
+	logOutput_mode=10,
 	reset_map=15
 }ModeType;
 

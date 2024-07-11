@@ -9,7 +9,8 @@ typedef enum {
 	stay=3,
 	slalom=4,
 	clothoid=5,
-	constant_voltage=6
+	constant_voltage=6,
+	line_wo_wall=7
 	
 }TrajType;
 
@@ -109,6 +110,12 @@ private:
 	
 	float v; //[mm/s]
 	float pos; //[mm]
+
+};
+
+class LineWoWall:public Line{
+public:
+	LineWoWall(float _x, float _y, float _theta, float _v0, float _vmax, float _vf, float _a, float _j);
 
 };
 class ConstantVoltage:public Trajectory{

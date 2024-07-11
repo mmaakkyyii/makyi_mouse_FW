@@ -74,11 +74,11 @@ void ModeSelect::Interrupt_1ms(){
 			mouse->buzzer->On_ms(800,50);
 			break;
 		case 2:
-			next_mode=debug_mode;
+			next_mode=digoRun_mode;
 			mouse->buzzer->On_ms(800,50);
 			break;
 		case 3:
-			next_mode=parameterSetting_mode;
+			next_mode=debug_mode;
 			mouse->buzzer->On_ms(800,50);
 			break;
 		case 4:
@@ -91,6 +91,10 @@ void ModeSelect::Interrupt_1ms(){
 			break;
 		case 6:
 			next_mode=logOutput_mode;
+			mouse->buzzer->On_ms(800,50);
+			break;
+		case 14:
+			next_mode=parameterSetting_mode;
 			mouse->buzzer->On_ms(800,50);
 			break;
 		case 15:
