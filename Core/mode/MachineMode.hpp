@@ -120,15 +120,6 @@ public:
 };
 
 
-class LogOutput:public MachineMode{
-public:
-	void Loop();
-	void Init();
-	void Interrupt_1ms();
-	LogOutput(Mouse* _mouse);
-	virtual ~LogOutput(){};
-	int index;
-};
 class ResetMap:public MachineMode{
 public:
 	void Loop();

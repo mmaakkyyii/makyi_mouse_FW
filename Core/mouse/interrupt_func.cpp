@@ -9,6 +9,7 @@
 #include "LowBatteryMode.hpp"
 #include "FastRunMode.hpp"
 #include "DigoRun.hpp"
+#include "LogOutputMode.hpp"
 
 extern Mouse mouse;
 extern MachineMode* mode; 
