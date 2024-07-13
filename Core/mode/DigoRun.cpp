@@ -223,7 +223,7 @@ void DigoRun::Interrupt_1ms(){
 		if(trajectory->Update()){
 
 			if(path_index>=path_length){
-				mouse->buzzer->On_ms(4000,40);
+				mouse->buzzer->On_ms(400,40);
 //					path_index++;
 				end_run_flag=true;
 
@@ -270,6 +270,42 @@ void DigoRun::Interrupt_1ms(){
 									new MultTrajectory(
 											new LineWoWall(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0),
 											new Clothoid(clothoid,1),
+											new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm +SECTION_WIDTH/2, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
+									)
+									));
+
+						}
+
+					}else if( mouse->maze_solver->adachi.run_plan[path_index    ] == TurnLeft &&
+							mouse->maze_solver->adachi.run_plan[path_index + 1] == TurnRight &&
+							mouse->maze_solver->adachi.run_plan[path_index + 2] == Forward
+						){
+						path_index+=3;
+						clothoid=clothoid_200mm_45deg;
+
+						if(path_index<path_length){
+							trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+									new MultTrajectory(
+											new Line(0.0, (stright_num-1)*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, clothoid.v, v_max_mm_s, clothoid.v, 2000, 0.0),
+											new Clothoid(clothoid,1),
+											new LineWoWall(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0)
+									),
+									new MultTrajectory(
+											new LineWoWall(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0),
+											new Clothoid(clothoid,-1),
+											new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0)
+									)
+									));
+						}else{
+							trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+									new MultTrajectory(
+											new Line(0.0, (stright_num-1)*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, clothoid.v, v_max_mm_s, clothoid.v, 2000, 0.0),
+											new Clothoid(clothoid,1),
+											new LineWoWall(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0)
+									),
+									new MultTrajectory(
+											new LineWoWall(0.0, clothoid.out_mm, 0.0, clothoid.v, clothoid.v, clothoid.v, 2000, 0.0),
+											new Clothoid(clothoid,-1),
 											new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm +SECTION_WIDTH/2, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
 									)
 									));

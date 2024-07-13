@@ -29,8 +29,8 @@ private:
 
 	static const int TH_SEN_R = 250;	//�ǂ����邩�ۂ���臒l
 	static const int TH_SEN_L = 250;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FR = 250;	//�ǂ����邩�ۂ���臒l
-	static const int TH_SEN_FL = 250;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FR = 200;	//�ǂ����邩�ۂ���臒l
+	static const int TH_SEN_FL = 200;	//�ǂ����邩�ۂ���臒l
 
 
 

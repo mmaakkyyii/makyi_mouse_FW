@@ -152,7 +152,7 @@ void FastRun::Interrupt_1ms(){
 
 		switch(sla_mode){
 		case 0:
-			clothoid=clothoid_200mm_90deg_1;
+			clothoid=clothoid_200mm_90deg;
 			break;
 		case 1:
 			clothoid=clothoid_250mm_90deg_1;
@@ -167,7 +167,7 @@ void FastRun::Interrupt_1ms(){
 
 		switch(vel_mode){
 		case 0:
-			v_max_mm_s=200;
+			v_max_mm_s=300;
 			a_mm_ss=2000;
 			break;
 		case 1:
@@ -240,7 +240,7 @@ void FastRun::Interrupt_1ms(){
 
 			//printf("path index:%d run:%d\r\n",path_index ,mouse->maze_solver->adachi.run_plan[path_index]);
 			if(path_index>=path_length){
-				mouse->buzzer->On_ms(4000,40);
+				mouse->buzzer->On_ms(400,40);
 //					path_index++;
 				end_run_flag=true;
 

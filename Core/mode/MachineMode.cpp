@@ -24,10 +24,7 @@ bool goal_flag=false;
 float gyro[3];
 int gyro_raw[3];
 
-float Kp_wall=0.002;//0.004
-float Kd_wall=0.00001;//0.0003
-const float Kp_omega=0.0005;//0.001
-const float crash_acc=45.0*2;
+//const float crash_acc=45.0*2;
 
 
 
@@ -258,10 +255,10 @@ void SerchRun::Init(){
 	mouse->motorR_PID->Reset();
 	mouse->motorL_PID->Reset();
 	
-	v_max=200;
+	v_max=500;
 	acc=3500;
 
-	turn_v_max=200;
+	turn_v_max=300;
 	turn_omega_max=2*200/50;
 	a_omega=80;
 
@@ -314,27 +311,27 @@ void SerchRun::Interrupt_1ms(){
 		
 		switch(sla_mode){
 			case 0:
-				clothoid=clothoid_150mm_90deg_1;
-				v_max=180;
-				acc=2000;
-				break;
-			case 1:
-				clothoid=clothoid_150mm_90deg_1;
-				v_max=150;
-				acc=2000;
-				break;
-			case 2:
-				clothoid=clothoid_150mm_90deg_1;
+				clothoid=clothoid_200mm_90deg;
 				v_max=200;
 				acc=2000;
 				break;
+			case 1:
+				clothoid=clothoid_200mm_90deg;
+				v_max=300;
+				acc=2000;
+				break;
+			case 2:
+				clothoid=clothoid_200mm_90deg;
+				v_max=400;
+				acc=2000;
+				break;
 			case 3:
-				clothoid=clothoid_150mm_90deg_1;
+				clothoid=clothoid_200mm_90deg_1;
 				v_max=250;
 				acc=2000;
 				break;
 			case 4:
-				clothoid=clothoid_150mm_90deg_1;
+				clothoid=clothoid_200mm_90deg_1;
 				v_max=250;
 				acc=3500;
 				break;
@@ -554,9 +551,15 @@ next_mode=parameterSetting_mode;
 ///////////////////////////
 void LogOutput::Loop(){
 
-	printf("%d,%d,%d,%d\r\n",mouse->log_data[index][0],mouse->log_data[index][1],mouse->log_data[index][2],mouse->log_data[index][3]);
+	printf("%d,%d,%d,%d,%d,%d\r\n",
+			mouse->log_data[index][0],
+			mouse->log_data[index][1],
+			mouse->log_data[index][2],
+			mouse->log_data[index][3],
+			mouse->log_data[index][4],
+			mouse->log_data[index][5]);
 	index++;
-	if(index > mouse->log_data_num)next_mode=modeSelect_mode;
+	if(index >= mouse->log_data_num)next_mode=modeSelect_mode;
 }
 void LogOutput::Init(){
 	current_mode=logOutput_mode;

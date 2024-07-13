@@ -50,8 +50,8 @@ public:
 	WallMask wall_mask;
 	bool runing_buzzer;
 
-	static const int log_data_num=1000;
-	int log_data[log_data_num][4];
+	static const int log_data_num=3000;
+	int log_data[log_data_num][10];
 	int log_index=0;
 
 private:

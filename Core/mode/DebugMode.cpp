@@ -61,10 +61,32 @@ void Debug::Interrupt_1ms(){
 		if(no_hand_flag)cal=mouse->imu->Calibration();
 		if(cal){
 			idle=false;
-			float v_max=500;
-			clothoid=clothoid_200mm_45deg;
+			float v_max_mm_s=400;
+			float a_mm_ss= 2000;
+			clothoid=clothoid_200mm_90deg;
 
+			int stright_num=5;
 
+//			trajectory=std::unique_ptr<ConstantVoltage>(new ConstantVoltage(0.3, 0.3, 500));
+			//trajectory=std::unique_ptr<Line>(new Line(0.0, (stright_num)*SECTION_WIDTH, 0.0, 0, v_max_mm_s, 0,a_mm_ss, 0.0));
+//*
+			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+					new MultTrajectory(
+						new Line(0.0, 2*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, clothoid.v, clothoid.v, 2000, 0.0),
+						new Clothoid(clothoid,1),
+						new Line(0.0, clothoid.out_mm +SECTION_WIDTH/2, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
+					),
+					new Stay(500)
+				));
+//*/
+
+//			trajectory =std::unique_ptr<MultTrajectory>(new MultTrajectory(
+//							new Line(0.0, 2*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, clothoid.v, clothoid.v, 2000, 0.0),
+//							new Clothoid(clothoid,1),
+//							new Line(0.0, clothoid.out_mm +SECTION_WIDTH/2, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
+//					));
+
+/* 45deg 45deg
 			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
 					new MultTrajectory(
 							new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, clothoid.v, clothoid.v, 2000, 0.0),
@@ -77,6 +99,7 @@ void Debug::Interrupt_1ms(){
 							new Line(0.0, SECTION_WIDTH/2+clothoid.in_mm, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
 					)
 					));
+//*/
 		}
 	}else{
 		if(trajectory->Update()){
@@ -85,6 +108,15 @@ void Debug::Interrupt_1ms(){
 
 			trajectory->GetTargetPosition(&target_x, &target_y, &target_theta);
 			trajectory->GetTargetVelocity(&target_vx,&target_vy,&target_omega);
+
+			static float pre_error_wall;
+			float period_s=0.001;
+			float wall_control=Kp_wall*mouse->wall_sensor->GetError() + Kd_wall *(mouse->wall_sensor->GetError()-pre_error_wall)/period_s;
+			if(trajectory->GetTragType()==line)target_omega+=wall_control;
+
+			pre_error_wall=mouse->wall_sensor->GetError();
+
+
 			Jacobian(target_vy,target_omega,&target_velocity_r,&target_velocity_l);
 
 			mouse->motorR_PID->SetTarget(target_velocity_r);
@@ -101,6 +133,9 @@ void Debug::Interrupt_1ms(){
 			mouse->log_data[mouse->log_index][0]=(int)(target_velocity_r );
 			mouse->log_data[mouse->log_index][1]=(int)(V_r*1000 );
 			mouse->log_data[mouse->log_index][2]=(int)(velocity_r );
+			mouse->log_data[mouse->log_index][3]=(int)(target_velocity_l );
+			mouse->log_data[mouse->log_index][4]=(int)(V_l*1000 );
+			mouse->log_data[mouse->log_index][5]=(int)(velocity_l );
 			mouse->log_index++;
 
 		}

@@ -44,8 +44,6 @@ private:
 	float a_omega_max_rad_ss;
 
 	const float crash_acc=45.0*2;
-	float Kp_wall=0.002;//0.004
-	float Kd_wall=0.00001;//0.0003
 };
 
 
