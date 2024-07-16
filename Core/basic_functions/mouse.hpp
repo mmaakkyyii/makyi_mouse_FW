@@ -51,7 +51,7 @@ public:
 	bool runing_buzzer;
 
 	static const int log_data_num=3000;
-	int log_data[log_data_num][10];
+	int log_data[log_data_num][20];
 	int log_index=0;
 
 private:

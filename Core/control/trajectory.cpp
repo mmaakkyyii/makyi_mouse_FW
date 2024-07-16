@@ -195,6 +195,7 @@ Rotate::Rotate(float _theta_deg,float _omega_max, float _a_omega):Trajectory(),t
 	t1=omega_max/a_omega;
 	t2=dir*((_theta_deg)*3.14/180.0)/omega_max;
 	t3=t1+t2;
+	t4=t3+0.2;
 }
 
 int Rotate::Update(){
@@ -209,6 +210,9 @@ int Rotate::Update(){
 		omega=dir* omega_max;//dir* (a_omega*t1);
 	}else if(t_s<t3){
 		omega=dir* (a_omega*t1- a_omega*(t_s-t2) );
+	}else if(t_s<t4){
+		omega=0;
+
 	}else{
 		omega=0;
 		is_finish=1;

@@ -155,10 +155,10 @@ void FastRun::Interrupt_1ms(){
 			clothoid=clothoid_200mm_90deg;
 			break;
 		case 1:
-			clothoid=clothoid_250mm_90deg_1;
+			clothoid=clothoid_250mm_90deg;
 			break;
 		case 2:
-			clothoid=clothoid_300mm_90deg_1;
+			clothoid=clothoid_300mm_90deg;
 			break;
 		default:
 			clothoid=clothoid_200mm_90deg_1;

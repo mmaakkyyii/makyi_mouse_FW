@@ -14,6 +14,7 @@ ModeSelect::ModeSelect(Mouse* _mouse):MachineMode(_mouse){
 }
 
 void ModeSelect::Init(){
+	encL_deg=0;
 	sw1=mouse->ui->GetSW1();
 	pre_sw1=sw1;
 	sw2=mouse->ui->GetSW2();
@@ -42,24 +43,23 @@ void ModeSelect::Interrupt_1ms(){
 		encL_deg=0;
 		mode_val++;
 
-		if(mode_val<15){
-			printf("ModeSelect%d\n\r",mode_val);
+		if(mode_val<=15){
 			mouse->buzzer->On_ms(400,20);
+		}else{
+			mode_val=0;
+				mouse->buzzer->On_ms(300,20);
+		}
+		printf("ModeSelect%d\n\r",mode_val);
+	}else if(encL_deg<-90){
+		encL_deg=0;
+		mode_val--;
+		if(mode_val>=0){
+			mouse->buzzer->On_ms(500,20);
 		}else{
 			mode_val=15;
 			mouse->buzzer->On_ms(300,20);
 		}
-	}else if(encL_deg<-90){
-		encL_deg=0;
-		mode_val--;
-		if(mode_val>0){
-			printf("ModeSelect%d\n\r",mode_val);
-			mouse->buzzer->On_ms(500,20);
-		}else{
-			mode_val=0;
-			mouse->buzzer->On_ms(300,20);
-		}
-
+		printf("ModeSelect%d\n\r",mode_val);
 	}
 
 	if(sw1<pre_sw1){

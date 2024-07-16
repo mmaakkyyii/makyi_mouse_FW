@@ -91,6 +91,7 @@ private:
 	float t1;
 	float t2;
 	float t3;
+	float t4;
 	float a_omega;
 	float omega_max;
 	int dir;

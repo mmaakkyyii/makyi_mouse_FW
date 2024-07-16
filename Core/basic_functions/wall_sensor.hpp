@@ -24,8 +24,8 @@ private:
 	static const int REF_SEN_R = 2100;//
 	static const int REF_SEN_L = 2100;//
 
-	static const int TH_CTRL_R = 1300;	//�ǂ����邩�ۂ���臒l
-	static const int TH_CTRL_L = 1300;	//�ǂ����邩�ۂ���臒l
+	static const int TH_CTRL_R = 1000;	//�ǂ����邩�ۂ���臒l
+	static const int TH_CTRL_L = 1000;	//�ǂ����邩�ۂ���臒l
 
 	static const int TH_SEN_R = 250;	//�ǂ����邩�ۂ���臒l
 	static const int TH_SEN_L = 250;	//�ǂ����邩�ۂ���臒l

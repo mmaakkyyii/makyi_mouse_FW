@@ -25,7 +25,8 @@ void SensorCheck::Loop(){
 				(int)(mouse->encorders->GetVelociryL_mm_s()),
 				(int)(mouse->encorders->GetVelociryR_mm_s()),
 				(int)(theta_gyro),
-				(int)gyro[2]
+				(int)acc[2]
+
 
 				);
 		//*/

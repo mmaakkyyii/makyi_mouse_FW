@@ -13,13 +13,13 @@ const float MACHINE_BACK_TIME=200;//TODO
 
 const float CONTROL_PERIOD_ms=1.0;
 
-const float Kp_motorR=0.001;//0.001
+const float Kp_motorR=0.008;//0.001
 const float Ki_motorR=0.00005;//0.002
-const float Kd_motorR=0.001;
+const float Kd_motorR=0.0001;
 
-const float Kp_motorL=0.001;
+const float Kp_motorL=0.008;
 const float Ki_motorL=0.00005;
-const float Kd_motorL=0.001;
+const float Kd_motorL=0.0002;
 
 const float Kp_wall=0.0005;//0.002
 const float Kd_wall=0.0000;//0.00003

@@ -20,9 +20,10 @@ void PID_Controler::Reset(){
 float PID_Controler::Update(float y){
 	float e=r-y;
 	sum+=e;
+	float output = kp*e + ki*sum + kd*(e-old_error);
 	old_error=e;
-	//return e;
-	return kp*e + ki*sum + kd*(e-old_error);//period_ms;
+
+	return output;
 }
 
 void PID_Controler::SetKp(float _kp){

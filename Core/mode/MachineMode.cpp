@@ -230,14 +230,14 @@ void SerchRun::Loop(){
 	}else{
 		//mouse->imu->GetGyro(gyro);
 
-		printf("%d,(%d,%d)%d,%d|%d,%d|%d,%d\r\n",trajectory->GetTragType(),(int)mouse->mouse_pos_x,mouse->mouse_pos_y,(int)target_velocity_r,(int)target_velocity_l,(int )(V_r*1000),(int )(V_l*1000),(int)velocity_r,(int)velocity_l);
+//		printf("%d,(%d,%d)%d,%d|%d,%d|%d,%d\r\n",trajectory->GetTragType(),(int)mouse->mouse_pos_x,mouse->mouse_pos_y,(int)target_velocity_r,(int)target_velocity_l,(int )(V_r*1000),(int )(V_l*1000),(int)velocity_r,(int)velocity_l);
 	}
 	float acc_data[3];
 	mouse->imu->GetAcc(acc_data);
 	static int reverse_time=0;
-	if(acc_data[2]<-5.0){
+	if(acc_data[2]<-4.0){
 		reverse_time++;
-		if(reverse_time>50){
+		if(reverse_time>10){
 			next_mode=modeSelect_mode;
 			mouse->buzzer->On_ms(240,40);
 		}
@@ -280,7 +280,6 @@ void SerchRun::Init(){
 void SerchRun::Interrupt_1ms(){
 	static float theta_rad=0;
 	static float sum_theta=0;
-	static int log_index=0;
 
 
 	if(idle){
@@ -316,18 +315,18 @@ void SerchRun::Interrupt_1ms(){
 				acc=2000;
 				break;
 			case 1:
-				clothoid=clothoid_200mm_90deg;
-				v_max=300;
+				clothoid=clothoid_250mm_90deg;
+				v_max=250;
 				acc=2000;
 				break;
 			case 2:
-				clothoid=clothoid_200mm_90deg;
-				v_max=400;
+				clothoid=clothoid_250mm_90deg;
+				v_max=300;
 				acc=2000;
 				break;
 			case 3:
-				clothoid=clothoid_200mm_90deg_1;
-				v_max=250;
+				clothoid=clothoid_300mm_90deg;
+				v_max=400;
 				acc=2000;
 				break;
 			case 4:
@@ -345,8 +344,7 @@ void SerchRun::Interrupt_1ms(){
 		static int gesture_sensorR_th=250;
 		static int gesture_sensorL_th=250;
 
-//		static int gesture_sensor_th=250;
-		if((mouse->wall_sensor->GetFrontR() > gesture_sensorR_th || mouse->wall_sensor->GetFrontL() > gesture_sensorL_th )){
+		if((mouse->wall_sensor->GetFrontR() > gesture_sensorR_th && mouse->wall_sensor->GetFrontL() > gesture_sensorL_th )){
 			gesture_flag=true;
 			mouse->buzzer->On_ms(300,40);
 		}
@@ -355,13 +353,14 @@ void SerchRun::Interrupt_1ms(){
 			mouse->buzzer->On_ms(400,40);
 		}
 		bool cal=false;
-		if(no_hand_flag)cal=mouse->imu->Calibration();
+		if(no_hand_flag){
+			mouse->ui->SetLED(15);
+			cal=mouse->imu->Calibration();
+		}
 		if(cal){
 			idle=false;
-			mouse->ui->SetLED(15);
 			trajectory=std::unique_ptr<Line>(new Line(0.0, SECTION_WIDTH/2.0, 0.0, 0.0, v_max, v_max, acc, 0.0));
 			mouse->mouse_pos_y++;
-			//trajectory=new Rotate(90, 0, 100.0, 0, 1);
 			trajectory->Update();
 
 		}
@@ -372,7 +371,6 @@ void SerchRun::Interrupt_1ms(){
 
 			theta_rad=0;
 			sum_theta=0;
-			log_index=0;
 			mouse->motors->SetVoltageR(V_r);
 			mouse->motors->SetVoltageL(V_l);
 
@@ -383,11 +381,12 @@ void SerchRun::Interrupt_1ms(){
 			static float pre_error_wall;
 			float period_s=0.001;
 			float wall_control=Kp_wall*mouse->wall_sensor->GetError() + Kd_wall *(mouse->wall_sensor->GetError()-pre_error_wall)/period_s;
-			if(trajectory->GetTragType()==line)target_omega+=wall_control;
-
 			pre_error_wall=mouse->wall_sensor->GetError();
+			if(trajectory->GetTragType()==line){
+				target_omega+=wall_control;
+			}
 
-			static float Kp_theta=10;//10
+			static float Kp_theta=2;//10
 			static float Ki_theta=0.0;
 			
 			mouse->imu->GetGyro(gyro);
@@ -395,25 +394,21 @@ void SerchRun::Interrupt_1ms(){
 			float e_theta=target_theta-theta_rad;
 			sum_theta+=e_theta;
 			if(trajectory->GetTragType()==rotate){
-
 				target_omega+= Kp_theta*e_theta + Ki_theta*sum_theta;
-				if(mouse->log_index < mouse->log_data_num-1){
-					mouse->log_data[mouse->log_index][0]=(int)(target_theta*1000);
-					mouse->log_data[mouse->log_index][1]=(int)(theta_rad*1000);
-					mouse->log_index++;
-				}
-			}else if(flash_flag==true && trajectory->GetTragType()==stay){
+			}else{
+				sum_theta=0;
+				theta_rad=0;
+			}
+
+			if(flash_flag==true && trajectory->GetTragType()==stay){
 				flash_flag=false;
 				mouse->buzzer->On_ms(500,500);
 				int param_data[param_data_num]={1,FlashGetGoalX(),FlashGetGoalY(),0,0,0,0,0};
 				FlashSetData(mouse->maze_solver->adachi.map,param_data);
 				FlashUpdateData();
-
-			}else{
-				sum_theta=0;
-				theta_rad=0;
 			}
 			
+
 			Jacobian(target_vy,target_omega,&target_velocity_r,&target_velocity_l);
 			
 			mouse->motorR_PID->SetTarget(target_velocity_r);
@@ -435,14 +430,30 @@ void SerchRun::Interrupt_1ms(){
 				mouse->motorR_PID->Reset();
 				mouse->motorL_PID->Reset();
 			}
+
+			if(mouse->log_index < mouse->log_data_num-1){
+				mouse->log_data[mouse->log_index][0]=(int)(target_velocity_r );
+				mouse->log_data[mouse->log_index][1]=(int)(V_r*1000 );
+				mouse->log_data[mouse->log_index][2]=(int)(velocity_r );
+				mouse->log_data[mouse->log_index][3]=(int)(target_velocity_l );
+				mouse->log_data[mouse->log_index][4]=(int)(V_l*1000 );
+				mouse->log_data[mouse->log_index][5]=(int)(velocity_l );
+				mouse->log_data[mouse->log_index][6]=mouse->wall_sensor->GetErrorR();
+				mouse->log_data[mouse->log_index][7]=mouse->wall_sensor->GetErrorL();
+				mouse->log_data[mouse->log_index][8]=trajectory->GetTragType();
+				mouse->log_data[mouse->log_index][9]=target_theta*180/3.14;
+				mouse->log_data[mouse->log_index][10]=theta_rad*180/3.14;
+				mouse->log_index++;
+			}
+
 		}
 
 	}
-	if(gyro[2]>1000 || gyro[2]<-1000){
+	if(gyro[2]>1500 || gyro[2]<-1500){
 		next_mode=modeSelect_mode;
 
-		mouse->motors->SetVoltageR(V_r);
-		mouse->motors->SetVoltageL(V_l);
+		mouse->motors->SetVoltageR(0);
+		mouse->motors->SetVoltageL(0);
 
 	}
 

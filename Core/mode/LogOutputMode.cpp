@@ -2,7 +2,7 @@
 
 void LogOutput::Loop(){
 
-	printf("%d,%d,%d,%d,%d,%d,%d,%d\r\n",
+	printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n",
 			mouse->log_data[index][0],
 			mouse->log_data[index][1],
 			mouse->log_data[index][2],
@@ -10,7 +10,10 @@ void LogOutput::Loop(){
 			mouse->log_data[index][4],
 			mouse->log_data[index][5],
 			mouse->log_data[index][6],
-			mouse->log_data[index][7]);
+			mouse->log_data[index][7],
+			mouse->log_data[index][8],
+			mouse->log_data[index][9],
+			mouse->log_data[index][10]);
 	index++;
 	if(index >= mouse->log_data_num)next_mode=modeSelect_mode;
 }

@@ -65,15 +65,15 @@ void Debug::Interrupt_1ms(){
 			float a_mm_ss= 2000;
 			clothoid=clothoid_200mm_90deg;
 
-			int stright_num=5;
+			int stright_num=3;
 
 //			trajectory=std::unique_ptr<ConstantVoltage>(new ConstantVoltage(0.3, 0.3, 500));
 			trajectory=std::unique_ptr<Line>(new Line(0.0, (stright_num)*SECTION_WIDTH, 0.0, 0, v_max_mm_s, 0,a_mm_ss, 0.0));
 /*
 			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
 					new MultTrajectory(
-						new Line(0.0, 2*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, clothoid.v, clothoid.v, 2000, 0.0),
-						new Clothoid(clothoid,1),
+						new Line(0.0, 7*SECTION_WIDTH+SECTION_WIDTH/2+clothoid.in_mm, 0.0, 0, v_max_mm_s, clothoid.v, 2000, 0.0),
+						new Clothoid(clothoid,-1),
 						new Line(0.0, clothoid.out_mm +SECTION_WIDTH/2, 0.0, clothoid.v, clothoid.v, 0, 2000, 0.0)
 					),
 					new Stay(500)
@@ -136,8 +136,8 @@ void Debug::Interrupt_1ms(){
 			mouse->log_data[mouse->log_index][3]=(int)(target_velocity_l );
 			mouse->log_data[mouse->log_index][4]=(int)(V_l*1000 );
 			mouse->log_data[mouse->log_index][5]=(int)(velocity_l );
-			mouse->log_data[mouse->log_index][6]=mouse->wall_sensor->GetFrontR();
-			mouse->log_data[mouse->log_index][7]=mouse->wall_sensor->GetFrontL();
+			mouse->log_data[mouse->log_index][6]=mouse->wall_sensor->GetErrorR();
+			mouse->log_data[mouse->log_index][7]=mouse->wall_sensor->GetErrorL();
 			mouse->log_index++;
 
 		}
