@@ -6,6 +6,8 @@ radius_mm(TIYA_R),
 period_ms(_period_ms),
 pulseR(0),
 pulseL(0),
+velocityR(0),
+velocityL(0),
 angle_dataL(0),
 angle_dataR(0),
 pre_angle_dataL(0),
@@ -14,6 +16,12 @@ pre_angle_dataR(0)
 	pluse2mm =  1/(PPR)*3.14*gear_ratio*radius_mm;
 
 }
+
+
+float fc=2;
+float tau=1/(2*3.14*fc);
+float alpha=CONTROL_PERIOD_ms/1000.0/(tau+CONTROL_PERIOD_ms/1000.0);
+
 
 void Encorders::Init(){
 	InitEncorderL();
@@ -41,6 +49,11 @@ void Encorders::InterruptL(){
 	if(pulseL<-8192)pulseL+=16384;
 	pulseL*=dirL;
 
+	static float pre_velL;
+	float input=(float)pulseL/PPR*2*3.14*gear_ratio*radius_mm/(period_ms*0.001);
+	velocityL=alpha*input+(1-alpha)*pre_velL;
+	pre_velL=velocityL;
+
 }
 void Encorders::InterruptR(){
 	angle_dataR=angle_dataR>>2;
@@ -48,6 +61,11 @@ void Encorders::InterruptR(){
 	if(pulseR>8192)pulseR-=16384;
 	if(pulseR<-8192)pulseR+=16384;
 	pulseR*=dirR;
+
+	static float pre_velR;
+	float input=(float)pulseR/PPR*2*3.14*gear_ratio*radius_mm/(period_ms*0.001);
+	velocityR=alpha*input+(1-alpha)*pre_velR;
+	pre_velR=velocityR;
 }
 
 void Encorders::Update(){
@@ -84,27 +102,10 @@ float Encorders::GetRPSR(){
 	return pulseR/period_ms;
 }
 
-float fc=0.001;
+
 float Encorders::GetVelociryL_mm_s(){
-	static float pre_vel;
-	float period_s=(float)period_ms/1000.0;
-	float g =1.0/fc;
-	float x=(float)pulseL/PPR*2*3.14*gear_ratio*radius_mm;
-
-	float vel=(pre_vel+g*x)/(1+g*period_s);
-
-	pre_vel=vel;
-	return vel;
+	return velocityL;
 }
 float Encorders::GetVelociryR_mm_s(){
-	static float pre_vel;
-	float period_s=(float)period_ms/1000.0;
-	float g =1.0/fc;
-	float x=(float)pulseR/PPR*2*3.14*gear_ratio*radius_mm;
-
-	float vel=(pre_vel+g*x)/(1+g*period_s);
-
-	pre_vel=vel;
-	return vel;
-//	return (float)pulseR/PPR*2*3.14*gear_ratio*radius_mm/(period_ms/1000.0);
+	return velocityR;
 }

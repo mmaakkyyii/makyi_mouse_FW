@@ -14,6 +14,8 @@ private:
 
 	int pulseR;
 	int pulseL;
+	float velocityR;
+	float velocityL;
 	const int dirR=1;
 	const int dirL=-1;
 

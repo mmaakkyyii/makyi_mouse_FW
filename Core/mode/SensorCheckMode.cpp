@@ -24,8 +24,8 @@ void SensorCheck::Loop(){
 				mouse->wall_sensor->GetRight(),
 				(int)(mouse->encorders->GetVelociryL_mm_s()),
 				(int)(mouse->encorders->GetVelociryR_mm_s()),
-				(int)(theta_gyro),
-				(int)acc[2]
+				(int)mouse->encorders->GetPulseL(),
+				(int)mouse->encorders->GetPulseR()
 
 
 				);
@@ -55,32 +55,10 @@ void SensorCheck::Interrupt_1ms(){
 
 	}
 
-	if(mouse->wall_sensor->GetWallFR() || mouse->wall_sensor->GetWallFL()){
-//			mouse->motorR_PID->SetTarget(0);
-//			mouse->motorL_PID->SetTarget(0);
-	}else if(mouse->wall_sensor->GetWallL()){
-//		mouse->motorR_PID->SetTarget(500);
-//		mouse->motorL_PID->SetTarget(500);
+	if(mouse->ui->GetSW1()){
+		mouse->motors->SetVoltageL(0.3);
+		mouse->motors->SetVoltageR(0.3);
 	}
-	mouse->motorR_PID->SetTarget(500);
-	mouse->motorL_PID->SetTarget(500);
-
-	float velocity_r=mouse->encorders->GetVelociryR_mm_s();
-	float velocity_l=mouse->encorders->GetVelociryL_mm_s();
-	float V_r=mouse->motorR_PID->Update(velocity_r);
-	float V_l=mouse->motorL_PID->Update(velocity_l);
-	float v_max=1.5;
-	if(V_r>v_max)V_r=v_max;
-	if(V_r<-v_max)V_r=-v_max;
-	if(V_l>v_max)V_l=v_max;
-	if(V_l<-v_max)V_l=-v_max;
-//	mouse->motors->SetVoltageR(V_r);
-//	mouse->motors->SetVoltageL(V_l);
-	mouse->motors->SetVoltageR(0);
-	mouse->motors->SetVoltageL(0);
-
-	static int led=1;
-	led=1-led;
 	mouse->ui->SetLED( mouse->wall_sensor->GetWallR() <<0 |
 			mouse->wall_sensor->GetWallFR()<<1 |
 			mouse->wall_sensor->GetWallFL()<<2 |
