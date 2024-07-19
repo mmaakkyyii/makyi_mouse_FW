@@ -386,7 +386,7 @@ void SerchRun::Interrupt_1ms(){
 				target_omega+=wall_control;
 			}
 
-			static float Kp_theta=0;//10
+			static float Kp_theta=2;//10
 			static float Ki_theta=0.0;
 			
 			mouse->imu->GetGyro(gyro);
@@ -395,6 +395,7 @@ void SerchRun::Interrupt_1ms(){
 			sum_theta+=e_theta;
 			if(trajectory->GetTragType()==rotate){
 				target_omega+= Kp_theta*e_theta + Ki_theta*sum_theta;
+				if(e_theta<-3.14/2 || e_theta>3.14/2)next_mode=modeSelect_mode;
 			}else{
 				sum_theta=0;
 				theta_rad=0;
