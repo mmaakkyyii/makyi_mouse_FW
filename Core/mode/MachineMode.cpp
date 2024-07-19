@@ -386,7 +386,7 @@ void SerchRun::Interrupt_1ms(){
 				target_omega+=wall_control;
 			}
 
-			static float Kp_theta=2;//10
+			static float Kp_theta=3;//10
 			static float Ki_theta=0.0;
 			
 			mouse->imu->GetGyro(gyro);
