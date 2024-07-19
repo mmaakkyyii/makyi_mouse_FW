@@ -61,14 +61,23 @@ void Debug::Interrupt_1ms(){
 		if(no_hand_flag)cal=mouse->imu->Calibration();
 		if(cal){
 			idle=false;
-			float v_max_mm_s=400;
+			float v_max_mm_s=200;
 			float a_mm_ss= 2000;
 			clothoid=clothoid_200mm_90deg;
 
 			int stright_num=3;
+			float turn_v_max=300;
+			float turn_omega_max=2*200/50;
+			float a_omega=80;
+//			trajectory=std::unique_ptr<Rotate>(new Rotate(180,turn_omega_max,a_omega));
 
 //			trajectory=std::unique_ptr<ConstantVoltage>(new ConstantVoltage(0.3, 0.3, 500));
-			trajectory=std::unique_ptr<Line>(new Line(0.0, (stright_num)*SECTION_WIDTH, 0.0, 0, v_max_mm_s, 0,a_mm_ss, 0.0));
+			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+					new Line(0.0, 1*SECTION_WIDTH, 0.0, 0, 300, 200,a_mm_ss, 0.0),
+					new Line(0.0, 1*SECTION_WIDTH, 0.0, 200, 200, 0,a_mm_ss, 0.0)
+				));
+
+
 /*
 			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
 					new MultTrajectory(

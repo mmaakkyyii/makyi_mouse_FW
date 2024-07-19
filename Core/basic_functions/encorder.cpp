@@ -18,7 +18,7 @@ pre_angle_dataR(0)
 }
 
 
-float fc=2;
+float fc=30;
 float tau=1/(2*3.14*fc);
 float alpha=CONTROL_PERIOD_ms/1000.0/(tau+CONTROL_PERIOD_ms/1000.0);
 

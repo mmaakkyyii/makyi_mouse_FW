@@ -345,6 +345,7 @@ void SerchRun::Interrupt_1ms(){
 		static int gesture_sensorL_th=250;
 
 		if((mouse->wall_sensor->GetFrontR() > gesture_sensorR_th && mouse->wall_sensor->GetFrontL() > gesture_sensorL_th )){
+			mouse->ui->SetLED(15);
 			gesture_flag=true;
 			mouse->buzzer->On_ms(300,40);
 		}
@@ -354,7 +355,6 @@ void SerchRun::Interrupt_1ms(){
 		}
 		bool cal=false;
 		if(no_hand_flag){
-			mouse->ui->SetLED(15);
 			cal=mouse->imu->Calibration();
 		}
 		if(cal){
@@ -386,7 +386,7 @@ void SerchRun::Interrupt_1ms(){
 				target_omega+=wall_control;
 			}
 
-			static float Kp_theta=2;//10
+			static float Kp_theta=0;//10
 			static float Ki_theta=0.0;
 			
 			mouse->imu->GetGyro(gyro);
