@@ -66,16 +66,16 @@ void Debug::Interrupt_1ms(){
 			clothoid=clothoid_200mm_90deg;
 
 			int stright_num=3;
-			float turn_v_max=300;
+			float turn_v_max=200;
 			float turn_omega_max=2*200/50;
 			float a_omega=80;
 //			trajectory=std::unique_ptr<Rotate>(new Rotate(180,turn_omega_max,a_omega));
-
+			trajectory=std::unique_ptr<Line>(new Line(0.0, 15*SECTION_WIDTH, 0.0, 0, v_max_mm_s, 0,a_mm_ss, 0.0));
 //			trajectory=std::unique_ptr<ConstantVoltage>(new ConstantVoltage(0.3, 0.3, 500));
-			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
-					new Line(0.0, 1*SECTION_WIDTH, 0.0, 0, 300, 200,a_mm_ss, 0.0),
-					new Line(0.0, 1*SECTION_WIDTH, 0.0, 200, 200, 0,a_mm_ss, 0.0)
-				));
+//			trajectory =std::unique_ptr<DoubleTrajectory>(new DoubleTrajectory(
+//					new Line(0.0, 1*SECTION_WIDTH, 0.0, 0, 300, 200,a_mm_ss, 0.0),
+//					new Line(0.0, 1*SECTION_WIDTH, 0.0, 200, 200, 0,a_mm_ss, 0.0)
+//				));
 
 
 /*
@@ -145,8 +145,10 @@ void Debug::Interrupt_1ms(){
 			mouse->log_data[mouse->log_index][3]=(int)(target_velocity_l );
 			mouse->log_data[mouse->log_index][4]=(int)(V_l*1000 );
 			mouse->log_data[mouse->log_index][5]=(int)(velocity_l );
-			mouse->log_data[mouse->log_index][6]=mouse->wall_sensor->GetErrorR();
-			mouse->log_data[mouse->log_index][7]=mouse->wall_sensor->GetErrorL();
+			mouse->log_data[mouse->log_index][6]=mouse->encorders->GetAngleR();
+			mouse->log_data[mouse->log_index][7]=mouse->encorders->GetAngleL();
+			//			mouse->log_data[mouse->log_index][6]=mouse->wall_sensor->GetErrorR();
+			//			mouse->log_data[mouse->log_index][7]=mouse->wall_sensor->GetErrorL();
 			mouse->log_index++;
 
 		}
