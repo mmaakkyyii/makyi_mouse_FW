@@ -171,32 +171,32 @@ void FastRun::Interrupt_1ms(){
 			a_mm_ss=2000;
 			break;
 		case 1:
-			v_max_mm_s=400;
-			a_mm_ss=2000;
-			break;
-		case 2:
 			v_max_mm_s=500;
 			a_mm_ss=2000;
 			break;
-		case 3:
-			v_max_mm_s=550;
-			a_mm_ss=2000;
-			break;
-		case 4:
+		case 2:
 			v_max_mm_s=600;
 			a_mm_ss=2000;
 			break;
-		case 5:
+		case 3:
 			v_max_mm_s=650;
 			a_mm_ss=2000;
 			break;
-		case 6:
+		case 4:
 			v_max_mm_s=700;
 			a_mm_ss=2000;
 			break;
+		case 5:
+			v_max_mm_s=800;
+			a_mm_ss=3000;
+			break;
+		case 6:
+			v_max_mm_s=900;
+			a_mm_ss=3000;
+			break;
 		case 7:
-			v_max_mm_s=750;
-			a_mm_ss=2000;
+			v_max_mm_s=1000;
+			a_mm_ss=3000;
 			break;
 		case 8:
 			v_max_mm_s=800;

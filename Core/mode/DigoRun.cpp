@@ -161,6 +161,8 @@ void DigoRun::Interrupt_1ms(){
 			a_mm_ss=4000;
 			break;
 		case 2:
+			v_max_mm_s=650;
+			a_mm_ss=4000;
 			break;
 		case 3:
 			v_max_mm_s=700;
