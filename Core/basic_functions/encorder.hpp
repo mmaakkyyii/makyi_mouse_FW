@@ -36,6 +36,9 @@ private:
 	float GetRPSR();
 
 public:
+	const uint8_t Z_ADDR_L=0x0;
+	const uint8_t Z_ADDR_H=0x1;
+	const uint8_t BCT_ADDR=0x2;
 	Encorders(int _period_ms);
 	void Init();
 	void Update();
@@ -50,6 +53,11 @@ public:
 
 	void InterruptL();
 	void InterruptR();
+
+	void SetDataL(uint8_t addr,uint8_t data);
+	void SetDataR(uint8_t addr,uint8_t data);
+	uint8_t ReadDataL(uint8_t addr);
+	uint8_t ReadDataR(uint8_t addr);
 
 };
 

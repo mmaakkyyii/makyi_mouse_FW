@@ -320,7 +320,7 @@ void SerchRun::Interrupt_1ms(){
 				acc=2000;
 				break;
 			case 2:
-				clothoid=clothoid_250mm_90deg;
+				clothoid=clothoid_300mm_90deg;
 				v_max=300;
 				acc=2000;
 				break;
@@ -425,6 +425,12 @@ void SerchRun::Interrupt_1ms(){
 			if(trajectory->GetTragType()!=constant_voltage){
 				mouse->motors->SetVoltageR(V_r);
 				mouse->motors->SetVoltageL(V_l);
+				if(V_r>V_esw || V_l>V_esw || V_r<-V_esw || V_l<-V_esw){
+					next_mode=modeSelect_mode;
+					mouse->motors->SetVoltageR(0);
+					mouse->motors->SetVoltageL(0);
+				}
+
 			}else{
 				mouse->motors->SetVoltageR(target_vx);
 				mouse->motors->SetVoltageL(target_vy);

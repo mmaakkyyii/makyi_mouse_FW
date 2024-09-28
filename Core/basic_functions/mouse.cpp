@@ -49,7 +49,27 @@ void Mouse::Init(){
 	encorders->Init();
 	imu->Init();
 	
+//	encorders->SetDataL(encorders->BCT_ADDR, 0);
+//	encorders->SetDataL(4, 0b11000000);
+//	encorders->SetDataL(6, 0b00011100);
+//	encorders->SetDataR(4, 0b11000000);
+//	encorders->SetDataR(6, 0b00011100);
+
+//	encorders->SetDataL(0x3, 0b0);
 	battery_check->Update();
+
+	printf("READ L\r\n");
+	HAL_Delay(50);
+	printf("%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n",
+			encorders->ReadDataL(0),encorders->ReadDataL(1),encorders->ReadDataL(2),encorders->ReadDataL(3),encorders->ReadDataL(4),encorders->ReadDataL(5),encorders->ReadDataL(6),encorders->ReadDataL(9),encorders->ReadDataL(0x1b));
+	HAL_Delay(200);
+
+	printf("READ R\r\n");
+	HAL_Delay(50);
+	printf("%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n",
+			encorders->ReadDataR(0),encorders->ReadDataR(1),encorders->ReadDataR(2),encorders->ReadDataR(3),encorders->ReadDataR(4),encorders->ReadDataR(5),encorders->ReadDataR(6),encorders->ReadDataR(9),encorders->ReadDataR(0x1b));
+	HAL_Delay(200);
+
 	printf("Start\r\n");
 
 

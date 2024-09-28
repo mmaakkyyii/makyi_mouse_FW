@@ -42,6 +42,48 @@ void Encorders::InitEncorderL(){
 void Encorders::InitEncorderR(){
 }
 
+uint8_t Encorders::ReadDataL(uint8_t addr){
+	tx_dataL[0]=0b0100000000000000 | (((uint16_t)addr)<<8);
+	tx_dataL[1]=0;
+	uint16_t rx_data[2]={0,0};
+	HAL_SPI_TransmitReceive(&hspi1, (uint8_t *)tx_dataL, (uint8_t *)&rx_data, 1,200);
+	tx_dataL[0]=0;
+	HAL_SPI_TransmitReceive(&hspi1, (uint8_t *)tx_dataL, (uint8_t *)&rx_data, 1,200);
+	return rx_data[0]>>8;
+}
+uint8_t Encorders::ReadDataR(uint8_t addr){
+	tx_dataR[0]=0b0100000000000000 | (((uint16_t)addr)<<8);
+	tx_dataR[1]=0;
+	uint16_t rx_data[2]={0,0};
+	HAL_SPI_TransmitReceive(&hspi3, (uint8_t *)tx_dataR, (uint8_t *)&rx_data, 1,200);
+	tx_dataR[0]=0;
+	HAL_SPI_TransmitReceive(&hspi3, (uint8_t *)tx_dataR, (uint8_t *)&rx_data, 1,200);
+	return rx_data[0]>>8;
+
+}
+void Encorders::SetDataL(uint8_t addr,uint8_t data){
+	tx_dataL[0]=0b1000000000000000 | (((uint16_t)addr)<<8) | data;
+	tx_dataL[1]=0;
+	uint16_t rx_data[2]={0,0};
+	HAL_SPI_TransmitReceive(&hspi1, (uint8_t *)tx_dataL, (uint8_t *)&rx_data, 1,100);
+	HAL_Delay(20);
+	tx_dataL[0]=0;
+	HAL_SPI_TransmitReceive(&hspi1, (uint8_t *)tx_dataL, (uint8_t *)&rx_data, 1,100);
+	HAL_Delay(20);
+}
+void Encorders::SetDataR(uint8_t addr,uint8_t data){
+	tx_dataR[0]=0b1000000000000000 | (((uint16_t)addr)<<8) | data;
+	tx_dataR[1]=0;
+	uint16_t rx_data[2]={0,0};
+	HAL_SPI_TransmitReceive(&hspi3, (uint8_t *)tx_dataR, (uint8_t *)&rx_data, 1,100);
+	HAL_Delay(20);
+	tx_dataR[0]=0;
+	HAL_SPI_TransmitReceive(&hspi3, (uint8_t *)tx_dataR, (uint8_t *)&rx_data, 1,100);
+	HAL_Delay(20);
+
+	//	HAL_SPI_TransmitReceive(&hspi3, (uint8_t *)tx_dataR, (uint8_t *)&angle_dataR, 1,100);
+}
+
 void Encorders::InterruptL(){
 	angle_dataL=angle_dataL>>2;
 	pulseL=angle_dataL-pre_angle_dataL;

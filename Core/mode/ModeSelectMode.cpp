@@ -39,6 +39,7 @@ void ModeSelect::Interrupt_1ms(){
 	sw3=mouse->ui->GetSW3();
 
 	encL_deg += mouse->encorders->GetPulseL()/16384.0*360;
+
 	if(encL_deg>90){
 		encL_deg=0;
 		mode_val++;

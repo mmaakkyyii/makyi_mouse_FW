@@ -339,6 +339,12 @@ void FastRun::Interrupt_1ms(){
 
 			mouse->motors->SetVoltageR(V_r);
 			mouse->motors->SetVoltageL(V_l);
+			if(V_r>V_esw || V_l>V_esw || V_r<-V_esw || V_l<-V_esw){
+				next_mode=modeSelect_mode;
+				mouse->motors->SetVoltageR(0);
+				mouse->motors->SetVoltageL(0);
+			}
+
 		}
 
 	}

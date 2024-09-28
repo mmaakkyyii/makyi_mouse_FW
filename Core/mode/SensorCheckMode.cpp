@@ -15,7 +15,7 @@ void SensorCheck::Loop(){
 				(int)(mouse->encorders->GetVelociryR_mm_s())
 			);
 	//*/
-///*
+/*
 			printf("%4d|%4d,%4d,%4d,%4d, %5d,%5d,%4d,%4d\r\n",
 				(int)(1000*mouse->battery_check->GetBatteryVoltage_V()),
 				mouse->wall_sensor->GetLeft(),
@@ -48,28 +48,26 @@ void SensorCheck::Interrupt_1ms(){
 	mouse->imu->GetGyro(gyro);
 	theta_gyro+=(gyro[2]*0.001);
 	mouse->imu->GetAcc(acc);
-	float acc_th=1000;
+	float acc_th=500;
 	if(acc[0]*acc[0]+acc[1]*acc[1]>acc_th){
 		mouse->buzzer->On_ms(3000,10);
 		next_mode=modeSelect_mode;
-
 	}
 
-	if(mouse->ui->GetSW1()){
+	if(!mouse->ui->GetSW1()){
 		mouse->motors->SetVoltageL(0.3);
 		mouse->motors->SetVoltageR(0.3);
+	}else{
+		mouse->motors->SetVoltageL(0);
+		mouse->motors->SetVoltageR(0);
+
 	}
 	mouse->ui->SetLED( mouse->wall_sensor->GetWallR() <<0 |
 			mouse->wall_sensor->GetWallFR()<<1 |
 			mouse->wall_sensor->GetWallFL()<<2 |
 			mouse->wall_sensor->GetWallL()<<3       );
 
-	static int pre_sw1=mouse->ui->GetSW1();
-
-	if(pre_sw1==1 && mouse->ui->GetSW1()==0){
-		mouse->buzzer->On_ms(3000,10);
-		next_mode=modeSelect_mode;
-	}
+	printf("%d,%d\r\n",(int)(mouse->encorders->GetAngleL()),(int)(mouse->encorders->GetAngleR()));
 
 };
 
