@@ -3,7 +3,7 @@
 
 const float SECTION_WIDTH=90.0;
 const float TREAD_WIDTH=35.54;//TODO
-const float TIYA_R=13.2/2.0;//TODO 13.05/2.0
+const float TIYA_R=13.1 /2.0;//TODO 13.05/2.0
 const float MACHINE_BACK_LENGTH=90/2.0-29-5;//-29
 const float MACHINE_BACK_VOLTAGE_R=0.55;//TODO
 const float MACHINE_BACK_VOLTAGE_L=0.55;//TODO
